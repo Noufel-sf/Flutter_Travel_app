@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/booking.dart';
 import 'package:flutter_travel_concept/models/place.dart';
+import 'package:flutter_travel_concept/services/booking_service.dart';
 
 class BookingBottomSheet extends StatefulWidget {
   final Place place;
@@ -102,6 +103,8 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
       guestName: _nameController.text.trim(),
       createdAt: DateTime.now(),
     );
+
+    await bookingService.addBooking(booking);
 
     Navigator.pop(context); // Close bottom sheet
 

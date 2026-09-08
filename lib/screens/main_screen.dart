@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/screens/favorites_screen.dart';
 import 'package:flutter_travel_concept/screens/home.dart';
+import 'package:flutter_travel_concept/screens/profile_screen.dart';
+import 'package:flutter_travel_concept/services/booking_service.dart';
 import 'package:flutter_travel_concept/services/favorites_service.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
@@ -28,7 +30,9 @@ class _MainScreenState extends State<MainScreen> {
             onExploreTap: () => navigationTapped(0),
           ),
           const Home(),
-          const Home(),
+          ProfileScreen(
+            onExploreTap: () => navigationTapped(0),
+          ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -50,7 +54,16 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
             barIcon(icon: Icons.mode_comment, page: 2, badge: true),
-            barIcon(icon: Icons.person, page: 3),
+            ListenableBuilder(
+              listenable: bookingService,
+              builder: (context, _) {
+                return barIcon(
+                  icon: Icons.person,
+                  page: 3,
+                  badge: bookingService.count > 0,
+                );
+              },
+            ),
             const SizedBox(width: 7.0),
           ],
         ),

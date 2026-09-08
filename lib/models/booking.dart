@@ -21,5 +21,36 @@ class Booking {
     required this.createdAt,
   });
 
-  int get nights => checkOut.difference(checkIn).inDays;
+  int get nights {
+    final diff = checkOut.difference(checkIn).inDays;
+    return diff > 0 ? diff : 1;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'place': place.toJson(),
+      'checkIn': checkIn.toIso8601String(),
+      'checkOut': checkOut.toIso8601String(),
+      'guests': guests,
+      'totalPrice': totalPrice,
+      'guestName': guestName,
+      'createdAt': createdAt.toIso8601String(),
+    };
+  }
+
+  factory Booking.fromJson(Map<String, dynamic> json) {
+    return Booking(
+      id: json['id'] as String,
+      place: Place.fromJson(json['place'] as Map<String, dynamic>),
+      checkIn: DateTime.parse(json['checkIn'] as String),
+      checkOut: DateTime.parse(json['checkOut'] as String),
+      guests: json['guests'] as int? ?? 1,
+      totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
+      guestName: json['guestName'] as String? ?? '',
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : DateTime.now(),
+    );
+  }
 }
