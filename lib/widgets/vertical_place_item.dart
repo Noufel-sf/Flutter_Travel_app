@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_travel_concept/models/place.dart';
 
 import '../screens/details.dart';
 
 class VerticalPlaceItem extends StatelessWidget {
-  final Map place;
+  final Place place;
 
   const VerticalPlaceItem({super.key, required this.place});
 
   @override
   Widget build(BuildContext context) {
+    final heroTag = "vertical_place_${place.id}";
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
       child: InkWell(
+        borderRadius: BorderRadius.circular(5),
         child: SizedBox(
           height: 70.0,
           child: Row(
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Image.asset(
-                  "${place["img"]}",
-                  height: 70.0,
-                  width: 70.0,
-                  fit: BoxFit.cover,
+                child: Hero(
+                  tag: heroTag,
+                  child: Image.asset(
+                    place.img,
+                    height: 70.0,
+                    width: 70.0,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(width: 15.0),
@@ -37,7 +44,7 @@ class VerticalPlaceItem extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "${place["name"]}",
+                        place.name,
                         style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 14.0,
@@ -58,7 +65,7 @@ class VerticalPlaceItem extends StatelessWidget {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "${place["location"]}",
+                            place.location,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 13.0,
@@ -74,7 +81,7 @@ class VerticalPlaceItem extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "${place["price"]}",
+                        place.price,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0,
@@ -93,7 +100,7 @@ class VerticalPlaceItem extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) {
-                return Details();
+                return Details(place: place, heroTag: heroTag);
               },
             ),
           );

@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/util/const.dart';
-import 'package:flutter_travel_concept/util/places.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
-class Details extends StatelessWidget {
-  const Details({super.key});
+class Details extends StatefulWidget {
+  final Place place;
+  final String? heroTag;
+
+  const Details({
+    super.key,
+    required this.place,
+    this.heroTag,
+  });
+
+  @override
+  State<Details> createState() => _DetailsState();
+}
+
+class _DetailsState extends State<Details> {
+  bool _isBookmarked = false;
 
   @override
   Widget build(BuildContext context) {
+    final place = widget.place;
+    final images = place.images.isNotEmpty ? place.images : [place.img];
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
         actions: <Widget>[
@@ -44,7 +59,7 @@ class Details extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           const SizedBox(height: 10.0),
-          buildSlider(),
+          buildSlider(images),
           const SizedBox(height: 20),
           ListView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -55,10 +70,9 @@ class Details extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.centerLeft,
+                  Expanded(
                     child: Text(
-                      "${places[0]["name"]}",
+                      place.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 20,
@@ -68,13 +82,30 @@ class Details extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(
-                      Icons.bookmark,
+                    icon: Icon(
+                      _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                      color: _isBookmarked ? Colors.amber[800] : null,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        _isBookmarked = !_isBookmarked;
+                      });
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(seconds: 1),
+                          content: Text(
+                            _isBookmarked
+                                ? "${place.name} saved to bookmarks!"
+                                : "${place.name} removed from bookmarks.",
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
+              const SizedBox(height: 4),
               Row(
                 children: <Widget>[
                   Icon(
@@ -83,10 +114,9 @@ class Details extends StatelessWidget {
                     color: Colors.blueGrey[300],
                   ),
                   const SizedBox(width: 3),
-                  Container(
-                    alignment: Alignment.centerLeft,
+                  Expanded(
                     child: Text(
-                      "${places[0]["location"]}",
+                      place.location,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 13,
@@ -96,13 +126,26 @@ class Details extends StatelessWidget {
                       textAlign: TextAlign.left,
                     ),
                   ),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 2),
+                      Text(
+                        "${place.rating}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "${places[0]["price"]}",
+                  place.price,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 17,
@@ -111,7 +154,7 @@ class Details extends StatelessWidget {
                   textAlign: TextAlign.left,
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
               Container(
                 alignment: Alignment.centerLeft,
                 child: const Text(
@@ -128,7 +171,7 @@ class Details extends StatelessWidget {
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "${places[0]["details"]}",
+                  place.details,
                   style: const TextStyle(
                     fontWeight: FontWeight.normal,
                     fontSize: 15.0,
@@ -136,43 +179,58 @@ class Details extends StatelessWidget {
                   textAlign: TextAlign.left,
                 ),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 20.0),
             ],
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(
-          Icons.airplanemode_active,
-        ),
-        onPressed: () {},
+        tooltip: "Book Trip",
+        child: const Icon(Icons.airplanemode_active),
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Booking started for ${place.name}!"),
+              action: SnackBarAction(
+                label: "CONFIRM",
+                onPressed: () {},
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget buildSlider() {
+  Widget buildSlider(List<String> images) {
     return SizedBox(
       height: 250.0,
       child: ListView.builder(
         padding: const EdgeInsets.only(left: 20),
         scrollDirection: Axis.horizontal,
         primary: false,
-        itemCount: places.length,
+        itemCount: images.length,
         itemBuilder: (BuildContext context, int index) {
-          Map place = places[index];
+          final imgPath = images[index];
+          Widget imgWidget = Image.asset(
+            imgPath,
+            height: 250.0,
+            width: MediaQuery.of(context).size.width - 40.0,
+            fit: BoxFit.cover,
+          );
+
+          if (index == 0 && widget.heroTag != null) {
+            imgWidget = Hero(
+              tag: widget.heroTag!,
+              child: imgWidget,
+            );
+          }
 
           return Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: Builder(
-                builder: (context) => Image.asset(
-                  "${place["img"]}",
-                  height: 250.0,
-                  width: MediaQuery.of(context).size.width - 40.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: imgWidget,
             ),
           );
         },
