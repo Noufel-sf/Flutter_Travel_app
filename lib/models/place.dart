@@ -21,6 +21,12 @@ class Place {
     required this.details,
   });
 
+  /// Extracts numeric rate for calculations, e.g. "$100/night" -> 100.0
+  double get pricePerNight {
+    final clean = price.replaceAll(RegExp(r'[^0-9.]'), '');
+    return double.tryParse(clean) ?? 100.0;
+  }
+
   /// Factory constructor to deserialize from Map/JSON
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(

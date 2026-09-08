@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/services/favorites_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/widgets/booking_bottom_sheet.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
 class Details extends StatefulWidget {
@@ -192,20 +193,18 @@ class _DetailsState extends State<Details> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         tooltip: "Book Trip",
-        child: const Icon(Icons.airplanemode_active),
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Booking started for ${place.name}!"),
-              action: SnackBarAction(
-                label: "CONFIRM",
-                onPressed: () {},
-              ),
-            ),
-          );
-        },
+        icon: const Icon(Icons.airplanemode_active),
+        label: const Text(
+          "Book Now",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        foregroundColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : Colors.white,
+        onPressed: () => BookingBottomSheet.show(context, place),
       ),
     );
   }
