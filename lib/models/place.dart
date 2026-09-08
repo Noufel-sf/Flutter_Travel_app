@@ -5,6 +5,7 @@ class Place {
   final List<String> images;
   final String price;
   final String location;
+  final String category;
   final double rating;
   final String details;
 
@@ -15,6 +16,7 @@ class Place {
     this.images = const [],
     required this.price,
     required this.location,
+    this.category = 'Hotel',
     this.rating = 4.5,
     required this.details,
   });
@@ -32,6 +34,7 @@ class Place {
           (json['img'] != null ? [json['img'] as String] : const []),
       price: json['price'] as String? ?? r'$0/night',
       location: json['location'] as String? ?? '',
+      category: json['category'] as String? ?? 'Hotel',
       rating: (json['rating'] as num?)?.toDouble() ?? 4.5,
       details: json['details'] as String? ?? '',
     );
@@ -46,6 +49,7 @@ class Place {
       'images': images,
       'price': price,
       'location': location,
+      'category': category,
       'rating': rating,
       'details': details,
     };
@@ -59,6 +63,7 @@ class Place {
     List<String>? images,
     String? price,
     String? location,
+    String? category,
     double? rating,
     String? details,
   }) {
@@ -69,6 +74,7 @@ class Place {
       images: images ?? this.images,
       price: price ?? this.price,
       location: location ?? this.location,
+      category: category ?? this.category,
       rating: rating ?? this.rating,
       details: details ?? this.details,
     );

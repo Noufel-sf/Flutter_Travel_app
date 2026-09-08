@@ -8,6 +8,7 @@ final List<Place> places = [
     images: ["assets/1.jpeg", "assets/2.jpeg", "assets/3.jpeg"],
     price: r"$100/night",
     location: "London, England",
+    category: "Hotels",
     rating: 4.8,
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
@@ -26,6 +27,7 @@ final List<Place> places = [
     images: ["assets/2.jpeg", "assets/4.jpeg", "assets/5.jpeg"],
     price: r"$120/night",
     location: "Lisbon, Portugal",
+    category: "Beaches",
     rating: 4.7,
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
@@ -44,6 +46,7 @@ final List<Place> places = [
     images: ["assets/3.jpeg", "assets/1.jpeg", "assets/2.jpeg"],
     price: r"$85/night",
     location: "Paris, France",
+    category: "Restaurants",
     rating: 4.6,
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
@@ -62,6 +65,7 @@ final List<Place> places = [
     images: ["assets/4.jpeg", "assets/5.jpeg", "assets/1.jpeg"],
     price: r"$110/night",
     location: "Rome, Italy",
+    category: "Beaches",
     rating: 4.9,
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
@@ -80,6 +84,7 @@ final List<Place> places = [
     images: ["assets/5.jpeg", "assets/2.jpeg", "assets/3.jpeg"],
     price: r"$95/night",
     location: "Madrid, Spain",
+    category: "Resorts",
     rating: 4.5,
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
