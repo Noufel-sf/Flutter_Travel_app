@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_travel_concept/screens/favorites_screen.dart';
 import 'package:flutter_travel_concept/screens/home.dart';
+import 'package:flutter_travel_concept/services/favorites_service.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,7 +22,14 @@ class _MainScreenState extends State<MainScreen> {
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: onPageChanged,
-        children: List.generate(4, (index) => const Home()),
+        children: [
+          const Home(),
+          FavoritesScreen(
+            onExploreTap: () => navigationTapped(0),
+          ),
+          const Home(),
+          const Home(),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).primaryColor,
@@ -30,7 +39,16 @@ class _MainScreenState extends State<MainScreen> {
           children: <Widget>[
             const SizedBox(width: 7.0),
             barIcon(icon: Icons.home, page: 0),
-            barIcon(icon: Icons.favorite, page: 1),
+            ListenableBuilder(
+              listenable: favoritesService,
+              builder: (context, _) {
+                return barIcon(
+                  icon: Icons.favorite,
+                  page: 1,
+                  badge: favoritesService.count > 0,
+                );
+              },
+            ),
             barIcon(icon: Icons.mode_comment, page: 2, badge: true),
             barIcon(icon: Icons.person, page: 3),
             const SizedBox(width: 7.0),
@@ -58,7 +76,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void onPageChanged(int page) {
     setState(() {
-      this._page = page;
+      _page = page;
     });
   }
 

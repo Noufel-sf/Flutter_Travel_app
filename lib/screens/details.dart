@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/place.dart';
+import 'package:flutter_travel_concept/services/favorites_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
@@ -18,7 +19,6 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
-  bool _isBookmarked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -81,25 +81,33 @@ class _DetailsState extends State<Details> {
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: _isBookmarked ? Colors.amber[800] : null,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isBookmarked = !_isBookmarked;
-                      });
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: const Duration(seconds: 1),
-                          content: Text(
-                            _isBookmarked
-                                ? "${place.name} saved to bookmarks!"
-                                : "${place.name} removed from bookmarks.",
-                          ),
+                  ListenableBuilder(
+                    listenable: favoritesService,
+                    builder: (context, _) {
+                      final isSaved = favoritesService.isFavorite(place.id);
+                      return IconButton(
+                        icon: Icon(
+                          isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          color: isSaved ? Colors.amber[800] : null,
                         ),
+                        tooltip:
+                            isSaved ? "Remove from saved" : "Save destination",
+                        onPressed: () async {
+                          final added =
+                              await favoritesService.toggleFavorite(place.id);
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              duration: const Duration(seconds: 1),
+                              content: Text(
+                                added
+                                    ? "${place.name} saved to bookmarks!"
+                                    : "${place.name} removed from bookmarks.",
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
