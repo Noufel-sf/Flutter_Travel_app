@@ -6,6 +6,7 @@ class CustomSearchBar extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onClear;
   final VoidCallback? onFilterTap;
+  final int activeFiltersCount;
 
   const CustomSearchBar({
     super.key,
@@ -13,6 +14,7 @@ class CustomSearchBar extends StatelessWidget {
     this.onChanged,
     this.onClear,
     this.onFilterTap,
+    this.activeFiltersCount = 0,
   });
 
   @override
@@ -26,12 +28,16 @@ class CustomSearchBar extends StatelessWidget {
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(18.0),
         border: Border.all(
-          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-          width: 1.0,
+          color: activeFiltersCount > 0
+              ? Constants.brandBlue
+              : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+          width: activeFiltersCount > 0 ? 1.5 : 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            color: activeFiltersCount > 0
+                ? Constants.brandBlue.withValues(alpha: 0.12)
+                : Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
             blurRadius: 16.0,
             offset: const Offset(0, 4.0),
           ),
@@ -70,11 +76,47 @@ class CustomSearchBar extends StatelessWidget {
                 ),
               Padding(
                 padding: const EdgeInsets.only(right: 6.0),
-                child: IconButton(
-                  icon: const Icon(Icons.tune_rounded, size: 20),
-                  color: isDark ? Colors.white70 : const Color(0xFF64748B),
-                  tooltip: "Filter options",
-                  onPressed: onFilterTap,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.tune_rounded,
+                        size: 20,
+                        color: activeFiltersCount > 0
+                            ? Constants.brandBlue
+                            : (isDark ? Colors.white70 : const Color(0xFF64748B)),
+                      ),
+                      tooltip: "Filter options",
+                      onPressed: onFilterTap,
+                    ),
+                    if (activeFiltersCount > 0)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Constants.brandBlue,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 14,
+                            minHeight: 14,
+                          ),
+                          child: Text(
+                            "$activeFiltersCount",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              height: 1.0,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],

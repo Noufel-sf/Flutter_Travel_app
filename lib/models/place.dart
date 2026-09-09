@@ -8,6 +8,7 @@ class Place {
   final String category;
   final double rating;
   final String details;
+  final List<String> amenities;
 
   const Place({
     required this.id,
@@ -19,6 +20,7 @@ class Place {
     this.category = 'Hotel',
     this.rating = 4.5,
     required this.details,
+    this.amenities = const ['Free WiFi', 'Swimming Pool', 'Breakfast'],
   });
 
   /// Extracts numeric rate for calculations, e.g. "$100/night" -> 100.0
@@ -43,6 +45,10 @@ class Place {
       category: json['category'] as String? ?? 'Hotel',
       rating: (json['rating'] as num?)?.toDouble() ?? 4.5,
       details: json['details'] as String? ?? '',
+      amenities: (json['amenities'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const ['Free WiFi', 'Swimming Pool', 'Breakfast'],
     );
   }
 
@@ -58,6 +64,7 @@ class Place {
       'category': category,
       'rating': rating,
       'details': details,
+      'amenities': amenities,
     };
   }
 
@@ -72,6 +79,7 @@ class Place {
     String? category,
     double? rating,
     String? details,
+    List<String>? amenities,
   }) {
     return Place(
       id: id ?? this.id,
@@ -83,6 +91,7 @@ class Place {
       category: category ?? this.category,
       rating: rating ?? this.rating,
       details: details ?? this.details,
+      amenities: amenities ?? this.amenities,
     );
   }
 }

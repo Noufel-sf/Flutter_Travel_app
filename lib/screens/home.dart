@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_travel_concept/models/filter_criteria.dart';
 import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/util/places.dart';
+import 'package:flutter_travel_concept/widgets/filter_bottom_sheet.dart';
 import 'package:flutter_travel_concept/widgets/horizontal_place_item.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 import 'package:flutter_travel_concept/widgets/search_bar.dart';
@@ -40,22 +42,54 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
+  FilterCriteria _criteria = const FilterCriteria();
+
   List<Place> get _filteredPlaces {
     final query = _searchController.text.trim().toLowerCase();
-    return places.where((place) {
+    var list = places.where((place) {
       final matchesCategory = _selectedCategory == "All" ||
           place.category.toLowerCase() == _selectedCategory.toLowerCase();
       final matchesQuery = query.isEmpty ||
           place.name.toLowerCase().contains(query) ||
-          place.location.toLowerCase().contains(query);
-      return matchesCategory && matchesQuery;
+          place.location.toLowerCase().contains(query) ||
+          place.details.toLowerCase().contains(query);
+      final rate = place.pricePerNight;
+      final matchesPrice =
+          rate >= _criteria.priceRange.start && rate <= _criteria.priceRange.end;
+      final matchesRating =
+          _criteria.minRating == 0.0 || place.rating >= _criteria.minRating;
+      final matchesAmenities = _criteria.amenities.isEmpty ||
+          _criteria.amenities.every((a) => place.amenities.contains(a));
+
+      return matchesCategory &&
+          matchesQuery &&
+          matchesPrice &&
+          matchesRating &&
+          matchesAmenities;
     }).toList();
+
+    switch (_criteria.sortBy) {
+      case SortOption.priceLowToHigh:
+        list.sort((a, b) => a.pricePerNight.compareTo(b.pricePerNight));
+        break;
+      case SortOption.priceHighToLow:
+        list.sort((a, b) => b.pricePerNight.compareTo(a.pricePerNight));
+        break;
+      case SortOption.highestRated:
+        list.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case SortOption.recommended:
+        break;
+    }
+
+    return list;
   }
 
   void _clearFilters() {
     setState(() {
       _searchController.clear();
       _selectedCategory = "All";
+      _criteria = const FilterCriteria();
     });
   }
 
@@ -161,9 +195,22 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: CustomSearchBar(
                 controller: _searchController,
+                activeFiltersCount: _criteria.activeFiltersCount,
                 onClear: () => _searchController.clear(),
                 onFilterTap: () {
-                  _showFilterOptionsModal(context);
+                  FilterBottomSheet.show(
+                    context,
+                    initialCriteria: _criteria,
+                    allPlaces: places,
+                    onApply: (newCriteria) {
+                      setState(() {
+                        _criteria = newCriteria;
+                        if (newCriteria.category != 'All') {
+                          _selectedCategory = newCriteria.category;
+                        }
+                      });
+                    },
+                  );
                 },
               ),
             ),
@@ -437,65 +484,6 @@ class _HomeState extends State<Home> {
           return VerticalPlaceItem(place: place);
         },
       ),
-    );
-  }
-
-  void _showFilterOptionsModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
-      ),
-      builder: (ctx) {
-        return Container(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Filter Destinations",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: _categoryData.map((c) {
-                  final key = c["name"] as String;
-                  final isSelected = _selectedCategory == key;
-                  return ChoiceChip(
-                    label: Text(c["label"] as String),
-                    selected: isSelected,
-                    selectedColor: Constants.brandBlue,
-                    labelStyle: TextStyle(
-                      color: isSelected ? Colors.white : Constants.textDark,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.w500,
-                    ),
-                    onSelected: (_) {
-                      setState(() => _selectedCategory = key);
-                      Navigator.pop(ctx);
-                    },
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        );
-      },
     );
   }
 }

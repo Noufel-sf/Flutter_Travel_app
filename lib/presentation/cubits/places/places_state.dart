@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_travel_concept/models/filter_criteria.dart';
 import 'package:flutter_travel_concept/models/place.dart';
 
 abstract class PlacesState extends Equatable {
@@ -21,12 +22,14 @@ class PlacesLoaded extends PlacesState {
   final List<Place> filteredPlaces;
   final String selectedCategory;
   final String searchQuery;
+  final FilterCriteria criteria;
 
   const PlacesLoaded({
     required this.allPlaces,
     required this.filteredPlaces,
     this.selectedCategory = 'All',
     this.searchQuery = '',
+    this.criteria = const FilterCriteria(),
   });
 
   PlacesLoaded copyWith({
@@ -34,12 +37,14 @@ class PlacesLoaded extends PlacesState {
     List<Place>? filteredPlaces,
     String? selectedCategory,
     String? searchQuery,
+    FilterCriteria? criteria,
   }) {
     return PlacesLoaded(
       allPlaces: allPlaces ?? this.allPlaces,
       filteredPlaces: filteredPlaces ?? this.filteredPlaces,
       selectedCategory: selectedCategory ?? this.selectedCategory,
       searchQuery: searchQuery ?? this.searchQuery,
+      criteria: criteria ?? this.criteria,
     );
   }
 
@@ -49,6 +54,7 @@ class PlacesLoaded extends PlacesState {
         filteredPlaces,
         selectedCategory,
         searchQuery,
+        criteria,
       ];
 }
 

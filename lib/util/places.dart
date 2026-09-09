@@ -10,6 +10,7 @@ final List<Place> places = [
     location: "London, England",
     category: "Hotels",
     rating: 4.8,
+    amenities: ["Free WiFi", "Swimming Pool", "Breakfast", "Spa"],
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
         "congue leo eget malesuada. "
@@ -29,6 +30,7 @@ final List<Place> places = [
     location: "Lisbon, Portugal",
     category: "Beaches",
     rating: 4.7,
+    amenities: ["Free WiFi", "Ocean View", "Breakfast"],
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
         "congue leo eget malesuada. "
@@ -48,6 +50,7 @@ final List<Place> places = [
     location: "Paris, France",
     category: "Restaurants",
     rating: 4.6,
+    amenities: ["Free WiFi", "Breakfast", "Fine Dining"],
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
         "congue leo eget malesuada. "
@@ -67,6 +70,7 @@ final List<Place> places = [
     location: "Rome, Italy",
     category: "Beaches",
     rating: 4.9,
+    amenities: ["Free WiFi", "Swimming Pool", "Ocean View", "Spa"],
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
         "congue leo eget malesuada. "
@@ -86,6 +90,7 @@ final List<Place> places = [
     location: "Madrid, Spain",
     category: "Resorts",
     rating: 4.5,
+    amenities: ["Free WiFi", "Swimming Pool", "Breakfast", "Gym"],
     details: "Pellentesque in ipsum id orci porta dapibus. "
         "Nulla porttitor accumsan tincidunt. Donec rutrum "
         "congue leo eget malesuada. "
