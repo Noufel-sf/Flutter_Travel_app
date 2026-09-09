@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/screens/details.dart';
-import 'package:flutter_travel_concept/services/favorites_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
@@ -45,10 +47,37 @@ class FavoritesScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListenableBuilder(
-        listenable: favoritesService,
-        builder: (context, _) {
-          final favoritePlaces = favoritesService.favoritePlaces;
+      body: BlocBuilder<FavoritesCubit, FavoritesState>(
+        builder: (context, state) {
+          if (state is FavoritesLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Constants.brandBlue),
+            );
+          }
+
+          if (state is FavoritesError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline_rounded,
+                      size: 48, color: Colors.redAccent),
+                  const SizedBox(height: 12),
+                  Text(state.message),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () =>
+                        context.read<FavoritesCubit>().loadFavorites(),
+                    child: const Text("Retry"),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final favoritePlaces = (state is FavoritesLoaded)
+              ? state.favoritePlaces
+              : [];
 
           if (favoritePlaces.isEmpty) {
             return Center(
@@ -57,7 +86,7 @@ class FavoritesScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                      Container(
+                    Container(
                       padding: const EdgeInsets.all(22),
                       decoration: BoxDecoration(
                         color: Constants.brandBlueSoft,
@@ -138,7 +167,7 @@ class FavoritesScreen extends StatelessWidget {
                   ),
                 ),
                 onDismissed: (_) {
-                  favoritesService.toggleFavorite(place.id);
+                  context.read<FavoritesCubit>().toggleFavorite(place.id);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       duration: const Duration(seconds: 2),
@@ -147,7 +176,7 @@ class FavoritesScreen extends StatelessWidget {
                         label: "UNDO",
                         textColor: Constants.accentGold,
                         onPressed: () {
-                          favoritesService.toggleFavorite(place.id);
+                          context.read<FavoritesCubit>().toggleFavorite(place.id);
                         },
                       ),
                     ),
@@ -292,7 +321,7 @@ class FavoritesScreen extends StatelessWidget {
                               ),
                               tooltip: "Remove from Saved",
                               onPressed: () {
-                                favoritesService.toggleFavorite(place.id);
+                                context.read<FavoritesCubit>().toggleFavorite(place.id);
                               },
                             ),
                           ],

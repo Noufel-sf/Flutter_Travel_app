@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_travel_concept/models/place.dart';
-import 'package:flutter_travel_concept/services/favorites_service.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 
 import '../screens/details.dart';
@@ -150,10 +152,11 @@ class VerticalPlaceItem extends StatelessWidget {
               // Quick Bookmark Button
               Padding(
                 padding: const EdgeInsets.only(left: 6.0),
-                child: ListenableBuilder(
-                  listenable: favoritesService,
-                  builder: (context, _) {
-                    final isSaved = favoritesService.isFavorite(place.id);
+                child: BlocBuilder<FavoritesCubit, FavoritesState>(
+                  builder: (context, state) {
+                    final isSaved = (state is FavoritesLoaded)
+                        ? state.isFavorite(place.id)
+                        : false;
                     return IconButton(
                       icon: Icon(
                         isSaved
@@ -165,7 +168,7 @@ class VerticalPlaceItem extends StatelessWidget {
                         size: 20.0,
                       ),
                       onPressed: () {
-                        favoritesService.toggleFavorite(place.id);
+                        context.read<FavoritesCubit>().toggleFavorite(place.id);
                       },
                     );
                   },
