@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/models/review.dart';
 import 'package:flutter_travel_concept/services/reviews_service.dart';
+import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/util/places.dart';
 
 class WriteReviewDialog extends StatefulWidget {
@@ -80,14 +81,30 @@ class _WriteReviewDialogState extends State<WriteReviewDialog> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      title: const Row(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
+      title: Row(
         children: [
-          Icon(Icons.rate_review_outlined, color: Colors.amber),
-          SizedBox(width: 10),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Constants.brandBlueSoft,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.rate_review_rounded,
+              color: Constants.brandBlue,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
           Text(
             "Share Travel Tip",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 18.0,
+              letterSpacing: -0.3,
+              color: isDark ? Colors.white : Constants.textDark,
+            ),
           ),
         ],
       ),
@@ -99,16 +116,23 @@ class _WriteReviewDialogState extends State<WriteReviewDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Destination Dropdown
-              const Text(
+              Text(
                 "Destination",
-                style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? Colors.white : Constants.textDark,
+                ),
               ),
               const SizedBox(height: 6.0),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                padding: const EdgeInsets.symmetric(horizontal: 14.0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF252525) : Colors.blueGrey[50],
-                  borderRadius: BorderRadius.circular(10.0),
+                  color: isDark ? const Color(0xFF1E2430) : const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(14.0),
+                  border: Border.all(
+                    color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                  ),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<Place>(
@@ -119,7 +143,11 @@ class _WriteReviewDialogState extends State<WriteReviewDialog> {
                         value: p,
                         child: Text(
                           p.name,
-                          style: const TextStyle(fontSize: 13.0),
+                          style: TextStyle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? Colors.white : Constants.textDark,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       );
@@ -135,48 +163,80 @@ class _WriteReviewDialogState extends State<WriteReviewDialog> {
               const SizedBox(height: 16.0),
 
               // Rating Stars
-              const Text(
+              Text(
                 "Your Rating",
-                style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? Colors.white : Constants.textDark,
+                ),
               ),
               const SizedBox(height: 6.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (index) {
-                  final starIndex = index + 1;
-                  return IconButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    constraints: const BoxConstraints(),
-                    icon: Icon(
-                      starIndex <= _rating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 32,
-                    ),
-                    onPressed: () {
-                      setState(() => _rating = starIndex.toDouble());
-                    },
-                  );
-                }),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF1E2430) : const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(14.0),
+                  border: Border.all(
+                    color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    final starIndex = index + 1;
+                    return IconButton(
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      constraints: const BoxConstraints(),
+                      icon: Icon(
+                        starIndex <= _rating
+                            ? Icons.star_rounded
+                            : Icons.star_outline_rounded,
+                        color: Constants.accentGold,
+                        size: 32,
+                      ),
+                      onPressed: () {
+                        setState(() => _rating = starIndex.toDouble());
+                      },
+                    );
+                  }),
+                ),
               ),
               const SizedBox(height: 14.0),
 
               // Name Field
-              const Text(
+              Text(
                 "Your Name",
-                style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? Colors.white : Constants.textDark,
+                ),
               ),
               const SizedBox(height: 6.0),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.person_outline_rounded, color: Constants.brandBlue),
                   hintText: "Enter your name",
-                  contentPadding: const EdgeInsets.all(12.0),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
                   filled: true,
-                  fillColor:
-                      isDark ? const Color(0xFF252525) : Colors.blueGrey[50],
+                  fillColor: isDark ? const Color(0xFF1E2430) : const Color(0xFFF8FAFC),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: BorderSide(
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: BorderSide(
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: const BorderSide(color: Constants.brandBlue, width: 1.5),
                   ),
                 ),
                 validator: (val) {
@@ -189,9 +249,13 @@ class _WriteReviewDialogState extends State<WriteReviewDialog> {
               const SizedBox(height: 14.0),
 
               // Review Text Field
-              const Text(
+              Text(
                 "Review / Recommendations",
-                style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 13.0,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? Colors.white : Constants.textDark,
+                ),
               ),
               const SizedBox(height: 6.0),
               TextFormField(
@@ -200,14 +264,28 @@ class _WriteReviewDialogState extends State<WriteReviewDialog> {
                 decoration: InputDecoration(
                   hintText:
                       "Share tips (best time to visit, food suggestions, hidden spots...)",
-                  hintStyle: const TextStyle(fontSize: 12.0),
-                  contentPadding: const EdgeInsets.all(12.0),
+                  hintStyle: TextStyle(
+                    fontSize: 12.0,
+                    color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+                  ),
+                  contentPadding: const EdgeInsets.all(14.0),
                   filled: true,
-                  fillColor:
-                      isDark ? const Color(0xFF252525) : Colors.blueGrey[50],
+                  fillColor: isDark ? const Color(0xFF1E2430) : const Color(0xFFF8FAFC),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: BorderSide(
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: BorderSide(
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: const BorderSide(color: Constants.brandBlue, width: 1.5),
                   ),
                 ),
                 validator: (val) {
@@ -224,24 +302,29 @@ class _WriteReviewDialogState extends State<WriteReviewDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
+          style: TextButton.styleFrom(
+            foregroundColor: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+          ),
           child: const Text("Cancel"),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            foregroundColor: isDark ? Colors.black : Colors.white,
+            backgroundColor: Constants.brandBlue,
+            foregroundColor: Colors.white,
+            elevation: 0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(12.0),
             ),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
           ),
           onPressed: _isSubmitting ? null : _submit,
           child: _isSubmitting
               ? const SizedBox(
                   height: 16,
                   width: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                 )
-              : const Text("Post Review"),
+              : const Text("Post Review", style: TextStyle(fontWeight: FontWeight.w700)),
         ),
       ],
     );

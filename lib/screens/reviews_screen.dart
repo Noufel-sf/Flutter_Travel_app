@@ -79,7 +79,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 final isSelected = _selectedPlaceId == id;
 
                 return Padding(
-                  padding: const EdgeInsets.only(right: 6.0),
+                  padding: const EdgeInsets.only(right: 8.0),
                   child: FilterChip(
                     label: Text(label),
                     selected: isSelected,
@@ -87,21 +87,20 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     labelStyle: TextStyle(
                       fontSize: 12.0,
                       fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.w500,
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
                       color: isSelected
-                          ? (isDark ? Colors.black : Colors.white)
-                          : (isDark ? Colors.white70 : Colors.blueGrey[700]),
+                          ? Colors.white
+                          : (isDark ? const Color(0xFF94A3B8) : Constants.textLight),
                     ),
-                    selectedColor:
-                        isDark ? Colors.white : const Color(0xFF263238),
+                    selectedColor: Constants.brandBlue,
                     backgroundColor:
-                        isDark ? const Color(0xFF1E1E1E) : Colors.blueGrey[50],
+                        isDark ? const Color(0xFF1E2430) : const Color(0xFFF1F5F9),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.0),
                       side: BorderSide(
                         color: isSelected
                             ? Colors.transparent
-                            : (isDark ? Colors.white12 : Colors.black12),
+                            : (isDark ? const Color(0xFF2E384D) : const Color(0xFFE2E8F0)),
                       ),
                     ),
                     onSelected: (val) {
@@ -134,17 +133,24 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 56,
-                            color: Colors.blueGrey[300],
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Constants.brandBlueSoft,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.chat_bubble_outline_rounded,
+                              size: 48,
+                              color: Constants.brandBlue,
+                            ),
                           ),
-                          const SizedBox(height: 14.0),
+                          const SizedBox(height: 16.0),
                           const Text(
                             "No reviews for this place yet",
                             style: TextStyle(
                               fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                           const SizedBox(height: 6.0),
@@ -152,7 +158,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                             "Be the first traveler to share tips and photos!",
                             style: TextStyle(
                               fontSize: 13.0,
-                              color: Colors.blueGrey[400],
+                              color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                             ),
                           ),
                         ],
@@ -162,7 +168,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 }
 
                 return ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 80.0),
+                  padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 90.0),
                   itemCount: filtered.length,
                   itemBuilder: (context, index) {
                     final review = filtered[index];
@@ -175,13 +181,17 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.rate_review),
+        icon: const Icon(Icons.rate_review_rounded, size: 20),
         label: const Text(
           "Share Tip",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.w700),
         ),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        foregroundColor: isDark ? Colors.black : Colors.white,
+        backgroundColor: Constants.brandBlue,
+        foregroundColor: Colors.white,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         onPressed: () {
           Place? currentPlace;
           if (_selectedPlaceId != "All") {
@@ -202,10 +212,21 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14.0),
-      padding: const EdgeInsets.all(14.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.blueGrey[50],
-        borderRadius: BorderRadius.circular(14.0),
+        color: isDark ? const Color(0xFF1E2430) : Colors.white,
+        borderRadius: BorderRadius.circular(18.0),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E60FF).withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,14 +236,15 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             children: [
               CircleAvatar(
                 radius: 18,
-                backgroundColor: Theme.of(context).colorScheme.secondary,
+                backgroundColor: Constants.brandBlueSoft,
                 child: Text(
                   review.userName.isNotEmpty
                       ? review.userName[0].toUpperCase()
                       : "A",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.black : Colors.white,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: Constants.brandBlue,
+                    fontSize: 14.0,
                   ),
                 ),
               ),
@@ -233,33 +255,42 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   children: [
                     Text(
                       review.userName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
                         fontSize: 14.0,
+                        color: isDark ? Colors.white : Constants.textDark,
                       ),
                     ),
                     Text(
                       _formatTimeAgo(review.createdAt),
                       style: TextStyle(
                         fontSize: 11.0,
-                        color: Colors.blueGrey[300],
+                        color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                       ),
                     ),
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  const Icon(Icons.star, color: Colors.amber, size: 16),
-                  const SizedBox(width: 3),
-                  Text(
-                    review.rating.toStringAsFixed(1),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13.0,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.5),
+                decoration: BoxDecoration(
+                  color: Constants.accentGold.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.star_rounded, color: Constants.accentGold, size: 14),
+                    const SizedBox(width: 3),
+                    Text(
+                      review.rating.toStringAsFixed(1),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12.0,
+                        color: Constants.accentGold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -267,26 +298,26 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
           // Place tag chip
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+            padding: const EdgeInsets.symmetric(horizontal: 9.0, vertical: 4.0),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF2B2B2B) : Colors.white,
-              borderRadius: BorderRadius.circular(6.0),
+              color: Constants.brandBlueSoft,
+              borderRadius: BorderRadius.circular(8.0),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.location_on,
-                  size: 11.0,
-                  color: Colors.blueGrey[300],
+                const Icon(
+                  Icons.location_on_rounded,
+                  size: 12.0,
+                  color: Constants.brandBlue,
                 ),
                 const SizedBox(width: 4.0),
                 Text(
                   review.placeName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 11.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.blueGrey[400],
+                    fontWeight: FontWeight.w700,
+                    color: Constants.brandBlue,
                   ),
                 ),
               ],
@@ -297,12 +328,13 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           // Comment body
           Text(
             review.comment,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13.5,
-              height: 1.4,
+              height: 1.45,
+              color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF334155),
             ),
           ),
-          const SizedBox(height: 10.0),
+          const SizedBox(height: 12.0),
 
           // Helpful button
           Row(
@@ -319,9 +351,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   child: Row(
                     children: [
                       Icon(
-                        isUpvoted ? Icons.thumb_up : Icons.thumb_up_outlined,
+                        isUpvoted ? Icons.thumb_up_rounded : Icons.thumb_up_outlined,
                         size: 15,
-                        color: isUpvoted ? Colors.blueAccent : Colors.blueGrey[300],
+                        color: isUpvoted ? Constants.brandBlue : (isDark ? const Color(0xFF94A3B8) : Constants.textLight),
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -329,10 +361,10 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight:
-                              isUpvoted ? FontWeight.bold : FontWeight.w500,
+                              isUpvoted ? FontWeight.w700 : FontWeight.w500,
                           color: isUpvoted
-                              ? Colors.blueAccent
-                              : Colors.blueGrey[300],
+                              ? Constants.brandBlue
+                              : (isDark ? const Color(0xFF94A3B8) : Constants.textLight),
                         ),
                       ),
                     ],

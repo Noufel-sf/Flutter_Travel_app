@@ -6,59 +6,100 @@ final ValueNotifier<ThemeMode> themeModeNotifier =
 class Constants {
   static String appName = "Flutter Travel";
 
-  // Colors for theme
-  static const Color lightPrimary = Color(0xfffcfcff);
-  static const Color darkPrimary = Colors.black;
-  static const Color lightAccent = Color(0xFF263238);
-  static const Color darkAccent = Colors.white;
-  static const Color lightBG = Color(0xfffcfcff);
-  static const Color darkBG = Colors.black;
-  static const Color badgeColor = Colors.red;
+  // Modern Design System Color Palette (Inspired by Reference Mockups)
+  static const Color brandBlue = Color(0xFF1E60FF); // Vibrant Royal Blue
+  static const Color brandBlueSoft = Color(0xFFEEF4FF); // Soft Blue Tint
+  static const Color brandBlueDark = Color(0xFF1548C7);
+  static const Color accentGold = Color(0xFFF59E0B); // Rating Stars & Accents
+  static const Color badgeColor = Color(0xFFEF4444);
+
+  // Light Mode Colors
+  static const Color lightBG = Color(0xFFF8F9FD);
+  static const Color lightCard = Colors.white;
+  static const Color textDark = Color(0xFF0F172A);
+  static const Color textSubtle = Color(0xFF64748B);
+  static const Color textMuted = Color(0xFF94A3B8);
+  static const Color lightBorder = Color(0xFFE2E8F0);
+
+  // Dark Mode Colors
+  static const Color darkBG = Color(0xFF0B1120);
+  static const Color darkCard = Color(0xFF1E293B);
+  static const Color darkCardSoft = Color(0xFF243248);
+  static const Color textLight = Color(0xFFF8FAFC);
+  static const Color darkBorder = Color(0xFF334155);
 
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: lightPrimary,
+    primaryColor: brandBlue,
     scaffoldBackgroundColor: lightBG,
     colorScheme: const ColorScheme.light(
-      primary: lightPrimary,
-      secondary: lightAccent,
+      primary: brandBlue,
+      onPrimary: Colors.white,
+      secondary: brandBlue,
       surface: lightBG,
     ),
+    cardColor: lightCard,
     textSelectionTheme: const TextSelectionThemeData(
-      cursorColor: lightAccent,
+      cursorColor: brandBlue,
+      selectionColor: brandBlueSoft,
     ),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       backgroundColor: lightBG,
-      iconTheme: IconThemeData(color: Colors.black87),
+      iconTheme: IconThemeData(color: textDark),
       titleTextStyle: TextStyle(
-        color: darkBG,
+        color: textDark,
         fontSize: 18.0,
         fontWeight: FontWeight.w800,
+        letterSpacing: -0.2,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: brandBlue,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
       ),
     ),
   );
 
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: darkPrimary,
+    primaryColor: brandBlue,
     scaffoldBackgroundColor: darkBG,
     colorScheme: const ColorScheme.dark(
-      primary: darkPrimary,
-      secondary: darkAccent,
+      primary: brandBlue,
+      onPrimary: Colors.white,
+      secondary: brandBlue,
       surface: darkBG,
     ),
+    cardColor: darkCard,
     textSelectionTheme: const TextSelectionThemeData(
-      cursorColor: darkAccent,
+      cursorColor: brandBlue,
+      selectionColor: darkCardSoft,
     ),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       backgroundColor: darkBG,
-      iconTheme: IconThemeData(color: Colors.white),
+      iconTheme: IconThemeData(color: textLight),
       titleTextStyle: TextStyle(
-        color: lightBG,
+        color: textLight,
         fontSize: 18.0,
         fontWeight: FontWeight.w800,
+        letterSpacing: -0.2,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: brandBlue,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
       ),
     ),
   );

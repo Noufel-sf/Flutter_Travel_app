@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/place.dart';
+import 'package:flutter_travel_concept/services/favorites_service.dart';
+import 'package:flutter_travel_concept/util/const.dart';
 
 import '../screens/details.dart';
 
@@ -11,100 +13,167 @@ class VerticalPlaceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final heroTag = "vertical_place_${place.id}";
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15.0),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14.0),
       child: InkWell(
-        borderRadius: BorderRadius.circular(5),
-        child: SizedBox(
-          height: 70.0,
+        borderRadius: BorderRadius.circular(18.0),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => Details(place: place, heroTag: heroTag),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E293B) : Colors.white,
+            borderRadius: BorderRadius.circular(18.0),
+            border: Border.all(
+              color: isDark ? const Color(0xFF334155) : const Color(0xFFF1F5F9),
+              width: 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+                blurRadius: 14.0,
+                offset: const Offset(0, 4.0),
+              ),
+            ],
+          ),
           child: Row(
             children: <Widget>[
+              // Rounded Thumbnail
               ClipRRect(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(14.0),
                 child: Hero(
                   tag: heroTag,
                   child: Image.asset(
                     place.img,
-                    height: 70.0,
-                    width: 70.0,
+                    height: 84.0,
+                    width: 84.0,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              const SizedBox(width: 15.0),
-              SizedBox(
-                height: 80.0,
-                width: MediaQuery.of(context).size.width - 130.0,
-                child: ListView(
-                  primary: false,
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
+              const SizedBox(width: 14.0),
+
+              // Details Column
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        place.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14.0,
-                        ),
-                        maxLines: 2,
-                        textAlign: TextAlign.left,
+                    Text(
+                      place.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.0,
+                        color: isDark ? Colors.white : Constants.textDark,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 3.0),
+                    const SizedBox(height: 4.0),
                     Row(
                       children: <Widget>[
                         Icon(
-                          Icons.location_on,
+                          Icons.location_on_rounded,
                           size: 13.0,
-                          color: Colors.blueGrey[300],
+                          color: Constants.brandBlue,
                         ),
                         const SizedBox(width: 3.0),
-                        Container(
-                          alignment: Alignment.centerLeft,
+                        Expanded(
                           child: Text(
                             place.location,
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.0,
-                              color: Colors.blueGrey[300],
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                              color: isDark
+                                  ? const Color(0xFF94A3B8)
+                                  : const Color(0xFF64748B),
                             ),
                             maxLines: 1,
-                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10.0),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        place.price,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
+                    const SizedBox(height: 6.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "\$${place.pricePerNight.toStringAsFixed(0)}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 14.5,
+                                color: Constants.brandBlue,
+                              ),
+                            ),
+                            Text(
+                              "/night",
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                color: isDark
+                                    ? const Color(0xFF94A3B8)
+                                    : const Color(0xFF64748B),
+                              ),
+                            ),
+                          ],
                         ),
-                        maxLines: 1,
-                        textAlign: TextAlign.left,
-                      ),
+                        Row(
+                          children: [
+                            const Icon(Icons.star_rounded,
+                                color: Constants.accentGold, size: 14),
+                            const SizedBox(width: 2.0),
+                            Text(
+                              "${place.rating}",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w700,
+                                color:
+                                    isDark ? Colors.white70 : Constants.textDark,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
+                ),
+              ),
+
+              // Quick Bookmark Button
+              Padding(
+                padding: const EdgeInsets.only(left: 6.0),
+                child: ListenableBuilder(
+                  listenable: favoritesService,
+                  builder: (context, _) {
+                    final isSaved = favoritesService.isFavorite(place.id);
+                    return IconButton(
+                      icon: Icon(
+                        isSaved
+                            ? Icons.bookmark_rounded
+                            : Icons.bookmark_outline_rounded,
+                        color: isSaved
+                            ? Constants.brandBlue
+                            : const Color(0xFF94A3B8),
+                        size: 20.0,
+                      ),
+                      onPressed: () {
+                        favoritesService.toggleFavorite(place.id);
+                      },
+                    );
+                  },
                 ),
               ),
             ],
           ),
         ),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return Details(place: place, heroTag: heroTag);
-              },
-            ),
-          );
-        },
       ),
     );
   }

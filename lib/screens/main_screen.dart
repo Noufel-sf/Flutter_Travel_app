@@ -6,6 +6,7 @@ import 'package:flutter_travel_concept/screens/reviews_screen.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
 import 'package:flutter_travel_concept/services/favorites_service.dart';
 import 'package:flutter_travel_concept/services/reviews_service.dart';
+import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
 class MainScreen extends StatefulWidget {
@@ -21,7 +22,10 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      extendBody: true,
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
@@ -39,46 +43,91 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            const SizedBox(width: 7.0),
-            barIcon(icon: Icons.home, page: 0),
-            ListenableBuilder(
-              listenable: favoritesService,
-              builder: (context, _) {
-                return barIcon(
-                  icon: Icons.favorite,
-                  page: 1,
-                  badge: favoritesService.count > 0,
-                );
-              },
-            ),
-            ListenableBuilder(
-              listenable: reviewsService,
-              builder: (context, _) {
-                return barIcon(
-                  icon: Icons.mode_comment,
-                  page: 2,
-                  badge: reviewsService.count > 0,
-                );
-              },
-            ),
-            ListenableBuilder(
-              listenable: bookingService,
-              builder: (context, _) {
-                return barIcon(
-                  icon: Icons.person,
-                  page: 3,
-                  badge: bookingService.count > 0,
-                );
-              },
-            ),
-            const SizedBox(width: 7.0),
-          ],
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          height: 64.0,
+          margin: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E293B) : Colors.white,
+            borderRadius: BorderRadius.circular(32.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
+                blurRadius: 24.0,
+                offset: const Offset(0, 8.0),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _buildNavButton(
+                pageIndex: 0,
+                icon: Icons.home_rounded,
+                inactiveIcon: Icons.home_outlined,
+              ),
+              ListenableBuilder(
+                listenable: favoritesService,
+                builder: (context, _) => _buildNavButton(
+                  pageIndex: 1,
+                  icon: Icons.bookmark_rounded,
+                  inactiveIcon: Icons.bookmark_border_rounded,
+                  showBadge: favoritesService.count > 0,
+                ),
+              ),
+              ListenableBuilder(
+                listenable: reviewsService,
+                builder: (context, _) => _buildNavButton(
+                  pageIndex: 2,
+                  icon: Icons.chat_bubble_rounded,
+                  inactiveIcon: Icons.chat_bubble_outline_rounded,
+                  showBadge: reviewsService.count > 0,
+                ),
+              ),
+              ListenableBuilder(
+                listenable: bookingService,
+                builder: (context, _) => _buildNavButton(
+                  pageIndex: 3,
+                  icon: Icons.person_rounded,
+                  inactiveIcon: Icons.person_outline_rounded,
+                  showBadge: bookingService.count > 0,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavButton({
+    required int pageIndex,
+    required IconData icon,
+    required IconData inactiveIcon,
+    bool showBadge = false,
+  }) {
+    final isSelected = _page == pageIndex;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(24.0),
+      onTap: () => navigationTapped(pageIndex),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+        width: 48.0,
+        height: 48.0,
+        decoration: BoxDecoration(
+          color: isSelected ? Constants.brandBlue : Colors.transparent,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: IconBadge(
+            icon: isSelected ? icon : inactiveIcon,
+            size: 24.0,
+            color: isSelected ? Colors.white : const Color(0xFF94A3B8),
+            showBadge: showBadge && !isSelected,
+          ),
         ),
       ),
     );
@@ -104,16 +153,5 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _page = page;
     });
-  }
-
-  Widget barIcon(
-      {IconData icon = Icons.home, int page = 0, bool badge = false}) {
-    return IconButton(
-      icon: badge ? IconBadge(icon: icon, size: 24.0) : Icon(icon, size: 24.0),
-      color: _page == page
-          ? Theme.of(context).colorScheme.secondary
-          : Colors.blueGrey[300],
-      onPressed: () => _pageController.jumpToPage(page),
-    );
   }
 }

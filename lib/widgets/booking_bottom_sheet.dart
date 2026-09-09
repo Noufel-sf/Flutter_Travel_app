@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/booking.dart';
 import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
+import 'package:flutter_travel_concept/util/const.dart';
 
 class BookingBottomSheet extends StatefulWidget {
   final Place place;
@@ -120,7 +121,7 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
 
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(22.0),
           ),
           contentPadding: const EdgeInsets.all(24.0),
           content: Column(
@@ -129,28 +130,30 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.12),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.check_circle_rounded,
-                  color: Colors.green,
+                  color: Color(0xFF10B981),
                   size: 56.0,
                 ),
               ),
               const SizedBox(height: 16.0),
-              const Text(
+              Text(
                 "Booking Confirmed!",
                 style: TextStyle(
                   fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.3,
+                  color: isDark ? Colors.white : Constants.textDark,
                 ),
               ),
               const SizedBox(height: 6.0),
               Text(
                 "Reference #${booking.id}",
                 style: TextStyle(
-                  color: Colors.blueGrey[400],
+                  color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                   fontWeight: FontWeight.w600,
                   fontSize: 13.0,
                 ),
@@ -160,9 +163,12 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                 padding: const EdgeInsets.all(14.0),
                 decoration: BoxDecoration(
                   color: isDark
-                      ? const Color(0xFF1E1E1E)
-                      : Colors.blueGrey[50],
-                  borderRadius: BorderRadius.circular(12.0),
+                      ? const Color(0xFF1E2430)
+                      : const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(16.0),
+                  border: Border.all(
+                    color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -177,8 +183,11 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                     const Divider(height: 14),
                     _dialogRow("Guest Name", booking.guestName),
                     const Divider(height: 14),
-                    _dialogRow("Total Paid", "\$${booking.totalPrice.toStringAsFixed(2)}",
-                        isBold: true),
+                    _dialogRow(
+                      "Total Paid",
+                      "\$${booking.totalPrice.toStringAsFixed(2)}",
+                      isBold: true,
+                    ),
                   ],
                 ),
               ),
@@ -187,20 +196,20 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(dialogContext).colorScheme.secondary,
-                    foregroundColor: isDark ? Colors.black : Colors.white,
+                    backgroundColor: Constants.brandBlue,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
+                      borderRadius: BorderRadius.circular(14.0),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(vertical: 14.0),
                   ),
                   onPressed: () {
                     Navigator.pop(dialogContext);
                   },
                   child: const Text(
                     "Done",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
@@ -228,7 +237,8 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
             textAlign: TextAlign.end,
             style: TextStyle(
               fontSize: 13.0,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
+              fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
+              color: isBold ? Constants.brandBlue : null,
             ),
           ),
         ),
@@ -243,10 +253,10 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF181818) : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
+        color: isDark ? const Color(0xFF181F2E) : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28.0)),
       ),
-      padding: EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 20.0 + bottomInset),
+      padding: EdgeInsets.fromLTRB(20.0, 14.0, 20.0, 20.0 + bottomInset),
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -258,10 +268,10 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
               Center(
                 child: Container(
                   height: 4.0,
-                  width: 40.0,
-                  margin: const EdgeInsets.only(bottom: 16.0),
+                  width: 38.0,
+                  margin: const EdgeInsets.only(bottom: 18.0),
                   decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.4),
+                    color: Colors.grey.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2.0),
                   ),
                 ),
@@ -271,11 +281,11 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
               Row(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(12.0),
                     child: Image.asset(
                       widget.place.img,
-                      height: 52.0,
-                      width: 52.0,
+                      height: 56.0,
+                      width: 56.0,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -284,18 +294,20 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           "Book Your Stay",
                           style: TextStyle(
                             fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.2,
+                            color: isDark ? Colors.white : Constants.textDark,
                           ),
                         ),
                         Text(
                           widget.place.name,
                           style: TextStyle(
                             fontSize: 13.0,
-                            color: Colors.blueGrey[400],
+                            color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -306,8 +318,9 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                   Text(
                     widget.place.price,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.0,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 16.0,
+                      color: Constants.brandBlue,
                     ),
                   ),
                 ],
@@ -315,28 +328,43 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
               const SizedBox(height: 20.0),
 
               // Date Range Picker Card
-              const Text(
+              Text(
                 "Travel Dates",
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.0),
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14.0,
+                  color: isDark ? Colors.white : Constants.textDark,
+                ),
               ),
               const SizedBox(height: 8.0),
               InkWell(
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(16.0),
                 onTap: _pickDateRange,
                 child: Container(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(14.0),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? const Color(0xFF242424)
-                        : Colors.blueGrey[50],
-                    borderRadius: BorderRadius.circular(12.0),
+                        ? const Color(0xFF1E2430)
+                        : const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(16.0),
                     border: Border.all(
-                      color: isDark ? Colors.white12 : Colors.black12,
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
                     ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.date_range, color: Colors.blueAccent),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Constants.brandBlueSoft,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.calendar_today_rounded,
+                          color: Constants.brandBlue,
+                          size: 18,
+                        ),
+                      ),
                       const SizedBox(width: 12.0),
                       Expanded(
                         child: Column(
@@ -344,16 +372,17 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                           children: [
                             Text(
                               "${_formatDate(_dateRange.start)} → ${_formatDate(_dateRange.end)}",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13.5,
+                                color: isDark ? Colors.white : Constants.textDark,
                               ),
                             ),
                             Text(
                               "$_nights night${_nights > 1 ? 's' : ''}",
                               style: TextStyle(
                                 fontSize: 12.0,
-                                color: Colors.blueGrey[400],
+                                color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                               ),
                             ),
                           ],
@@ -361,7 +390,13 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                       ),
                       TextButton(
                         onPressed: _pickDateRange,
-                        child: const Text("Change"),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Constants.brandBlue,
+                        ),
+                        child: const Text(
+                          "Change",
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
                       ),
                     ],
                   ),
@@ -376,16 +411,19 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         "Guests",
                         style: TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 14.0),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14.0,
+                          color: isDark ? Colors.white : Constants.textDark,
+                        ),
                       ),
                       Text(
                         "Adults & Children",
                         style: TextStyle(
                           fontSize: 12.0,
-                          color: Colors.blueGrey[400],
+                          color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                         ),
                       ),
                     ],
@@ -393,7 +431,11 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                   Row(
                     children: [
                       IconButton.filledTonal(
-                        icon: const Icon(Icons.remove, size: 18),
+                        style: IconButton.styleFrom(
+                          backgroundColor: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                          foregroundColor: isDark ? Colors.white : Constants.textDark,
+                        ),
+                        icon: const Icon(Icons.remove_rounded, size: 18),
                         onPressed: _guests > 1
                             ? () => setState(() => _guests--)
                             : null,
@@ -402,14 +444,19 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                         padding: const EdgeInsets.symmetric(horizontal: 14.0),
                         child: Text(
                           "$_guests",
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? Colors.white : Constants.textDark,
                           ),
                         ),
                       ),
                       IconButton.filledTonal(
-                        icon: const Icon(Icons.add, size: 18),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Constants.brandBlueSoft,
+                          foregroundColor: Constants.brandBlue,
+                        ),
+                        icon: const Icon(Icons.add_rounded, size: 18),
                         onPressed: _guests < 10
                             ? () => setState(() => _guests++)
                             : null,
@@ -421,24 +468,43 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
               const SizedBox(height: 16.0),
 
               // Guest Name Input Field
-              const Text(
+              Text(
                 "Primary Guest Name",
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.0),
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14.0,
+                  color: isDark ? Colors.white : Constants.textDark,
+                ),
               ),
               const SizedBox(height: 8.0),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.person_outline),
+                  prefixIcon: const Icon(Icons.person_outline_rounded, color: Constants.brandBlue),
                   hintText: "Enter full name",
-                  contentPadding: const EdgeInsets.all(12.0),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
                   filled: true,
                   fillColor: isDark
-                      ? const Color(0xFF242424)
-                      : Colors.blueGrey[50],
+                      ? const Color(0xFF1E2430)
+                      : const Color(0xFFF8FAFC),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: BorderSide(
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: BorderSide(
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14.0),
+                    borderSide: const BorderSide(
+                      color: Constants.brandBlue,
+                      width: 1.5,
+                    ),
                   ),
                 ),
                 validator: (val) {
@@ -452,12 +518,15 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
 
               // Price Summary
               Container(
-                padding: const EdgeInsets.all(14.0),
+                padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: isDark
-                      ? const Color(0xFF242424)
-                      : Colors.blueGrey[50],
-                  borderRadius: BorderRadius.circular(12.0),
+                      ? const Color(0xFF1E2430)
+                      : const Color(0xFFF8FAFC),
+                  borderRadius: BorderRadius.circular(16.0),
+                  border: Border.all(
+                    color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -465,29 +534,30 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                       "\$${widget.place.pricePerNight.toStringAsFixed(0)} × $_nights night${_nights > 1 ? 's' : ''}",
                       "\$${_basePrice.toStringAsFixed(2)}",
                     ),
-                    const SizedBox(height: 6.0),
+                    const SizedBox(height: 8.0),
                     _priceRow("Taxes & service fees (10%)",
                         "\$${_taxes.toStringAsFixed(2)}"),
-                    const Divider(height: 16.0),
+                    Divider(
+                      height: 20.0,
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           "Total Due",
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w800,
                             fontSize: 16.0,
+                            color: isDark ? Colors.white : Constants.textDark,
                           ),
                         ),
                         Text(
                           "\$${_totalPrice.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                            color: Theme.of(context).colorScheme.primary ==
-                                    Colors.black
-                                ? Colors.black
-                                : Colors.greenAccent[400],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 19.0,
+                            color: Constants.brandBlue,
                           ),
                         ),
                       ],
@@ -500,14 +570,14 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
               // Confirm Button
               SizedBox(
                 width: double.infinity,
-                height: 50.0,
+                height: 52.0,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.secondary,
-                    foregroundColor: isDark ? Colors.black : Colors.white,
+                    backgroundColor: Constants.brandBlue,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.0),
+                      borderRadius: BorderRadius.circular(16.0),
                     ),
                   ),
                   onPressed: _isSubmitting ? null : _submitBooking,
@@ -524,7 +594,7 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                           "Confirm & Reserve",
                           style: TextStyle(
                             fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                 ),

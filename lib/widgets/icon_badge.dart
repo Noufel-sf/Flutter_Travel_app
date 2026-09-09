@@ -1,50 +1,46 @@
 import 'package:flutter/material.dart';
 
-class IconBadge extends StatefulWidget {
+class IconBadge extends StatelessWidget {
   final IconData icon;
-  final double? size;
+  final double size;
   final Color? color;
+  final bool showBadge;
 
-  const IconBadge({super.key, required this.icon, this.size, this.color});
-
-  @override
-  _IconBadgeState createState() => _IconBadgeState();
-}
-
-class _IconBadgeState extends State<IconBadge> {
-  int counter = 0;
+  const IconBadge({
+    super.key,
+    required this.icon,
+    this.size = 24.0,
+    this.color,
+    this.showBadge = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      clipBehavior: Clip.none,
       children: <Widget>[
         Icon(
-          widget.icon,
-          size: widget.size,
-          color: widget.color,
+          icon,
+          size: size,
+          color: color,
         ),
-        Positioned(
-          right: 0.0,
-          top: 0.0,
-          child: Container(
-            padding: const EdgeInsets.all(1),
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            height: 12.0,
-            width: 12.0,
+        if (showBadge)
+          Positioned(
+            right: -2.0,
+            top: -2.0,
             child: Container(
-              padding: const EdgeInsets.all(1),
+              height: 9.0,
+              width: 9.0,
               decoration: BoxDecoration(
-                color: Colors.red[300],
-                borderRadius: BorderRadius.circular(6),
+                color: const Color(0xFFEF4444),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).cardColor,
+                  width: 1.5,
+                ),
               ),
-              height: 7.0,
-              width: 7.0,
             ),
           ),
-        ),
       ],
     );
   }

@@ -62,17 +62,19 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 36,
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Constants.brandBlue, width: 2),
+                    ),
                     child: CircleAvatar(
-                      radius: 34,
-                      backgroundColor:
-                          isDark ? const Color(0xFF2C2C2C) : Colors.blueGrey[100],
+                      radius: 36,
+                      backgroundColor: Constants.brandBlueSoft,
                       child: const Icon(
-                        Icons.person,
-                        size: 40,
-                        color: Colors.blueGrey,
+                        Icons.person_rounded,
+                        size: 44,
+                        color: Constants.brandBlue,
                       ),
                     ),
                   ),
@@ -80,15 +82,15 @@ class ProfileScreen extends StatelessWidget {
                     bottom: 0,
                     right: 0,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondary,
+                      padding: const EdgeInsets.all(5),
+                      decoration: const BoxDecoration(
+                        color: Constants.brandBlue,
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: 12,
-                        color: isDark ? Colors.black : Colors.white,
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        size: 13,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -99,27 +101,41 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Noufel Traveler",
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.3,
+                        color: isDark ? Colors.white : Constants.textDark,
                       ),
                     ),
                     const SizedBox(height: 4.0),
-                    Text(
-                      "Travel Enthusiast 🌍",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.blueGrey[400],
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Constants.brandBlueSoft,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            "Pro Explorer ✈️",
+                            style: TextStyle(
+                              fontSize: 11.0,
+                              fontWeight: FontWeight.w700,
+                              color: Constants.brandBlue,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 2.0),
+                    const SizedBox(height: 4.0),
                     Text(
                       "Member since 2026",
                       style: TextStyle(
                         fontSize: 12.0,
-                        color: Colors.blueGrey[300],
+                        color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                       ),
                     ),
                   ],
@@ -127,7 +143,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20.0),
+          const SizedBox(height: 22.0),
 
           // Stats Overview
           Row(
@@ -139,12 +155,13 @@ class ProfileScreen extends StatelessWidget {
                     context,
                     title: "Saved",
                     count: "${favoritesService.count}",
-                    icon: Icons.favorite,
-                    iconColor: Colors.redAccent,
+                    icon: Icons.bookmark_rounded,
+                    iconColor: Constants.brandBlue,
+                    bgColor: Constants.brandBlueSoft,
                   ),
                 ),
               ),
-              const SizedBox(width: 12.0),
+              const SizedBox(width: 10.0),
               Expanded(
                 child: ListenableBuilder(
                   listenable: bookingService,
@@ -152,19 +169,21 @@ class ProfileScreen extends StatelessWidget {
                     context,
                     title: "Trips",
                     count: "${bookingService.count}",
-                    icon: Icons.flight_takeoff,
-                    iconColor: Colors.blueAccent,
+                    icon: Icons.flight_takeoff_rounded,
+                    iconColor: const Color(0xFF10B981),
+                    bgColor: const Color(0xFF10B981).withValues(alpha: 0.12),
                   ),
                 ),
               ),
-              const SizedBox(width: 12.0),
+              const SizedBox(width: 10.0),
               Expanded(
                 child: _statCard(
                   context,
-                  title: "Places Visited",
+                  title: "Visited",
                   count: "5",
-                  icon: Icons.place,
-                  iconColor: Colors.orangeAccent,
+                  icon: Icons.place_rounded,
+                  iconColor: Constants.accentGold,
+                  bgColor: Constants.accentGold.withValues(alpha: 0.15),
                 ),
               ),
             ],
@@ -175,11 +194,13 @@ class ProfileScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "My Bookings",
                 style: TextStyle(
                   fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.3,
+                  color: isDark ? Colors.white : Constants.textDark,
                 ),
               ),
               ListenableBuilder(
@@ -189,7 +210,8 @@ class ProfileScreen extends StatelessWidget {
                     "${bookingService.count} active",
                     style: TextStyle(
                       fontSize: 13.0,
-                      color: Colors.blueGrey[400],
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                     ),
                   );
                 },
@@ -208,24 +230,32 @@ class ProfileScreen extends StatelessWidget {
                 return Container(
                   padding: const EdgeInsets.all(24.0),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xFF1E1E1E)
-                        : Colors.blueGrey[50],
-                    borderRadius: BorderRadius.circular(16.0),
+                    color: isDark ? const Color(0xFF1E2430) : Colors.white,
+                    borderRadius: BorderRadius.circular(18.0),
+                    border: Border.all(
+                      color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                    ),
                   ),
                   child: Column(
                     children: [
-                      Icon(
-                        Icons.luggage_outlined,
-                        size: 48,
-                        color: Colors.blueGrey[300],
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Constants.brandBlueSoft,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.luggage_rounded,
+                          size: 40,
+                          color: Constants.brandBlue,
+                        ),
                       ),
-                      const SizedBox(height: 12.0),
+                      const SizedBox(height: 14.0),
                       const Text(
                         "No active bookings yet",
                         style: TextStyle(
                           fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                       const SizedBox(height: 6.0),
@@ -234,13 +264,25 @@ class ProfileScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 13.0,
-                          color: Colors.blueGrey[400],
+                          color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      OutlinedButton.icon(
-                        icon: const Icon(Icons.explore),
-                        label: const Text("Explore Places"),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Constants.brandBlue,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        icon: const Icon(Icons.explore_rounded, size: 16),
+                        label: const Text(
+                          "Explore Places",
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
                         onPressed: onExploreTap,
                       ),
                     ],
@@ -257,23 +299,34 @@ class ProfileScreen extends StatelessWidget {
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 14.0),
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(14.0),
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xFF1E1E1E)
-                          : Colors.blueGrey[50],
-                      borderRadius: BorderRadius.circular(14.0),
+                      color: isDark ? const Color(0xFF1E2430) : Colors.white,
+                      borderRadius: BorderRadius.circular(18.0),
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0xFF2E384D)
+                            : const Color(0xFFE8EEF8),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF1E60FF).withValues(alpha: 0.04),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Column(
                       children: [
                         Row(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
+                              borderRadius: BorderRadius.circular(12.0),
                               child: Image.asset(
                                 booking.place.img,
-                                height: 65.0,
-                                width: 65.0,
+                                height: 68.0,
+                                width: 68.0,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -289,9 +342,11 @@ class ProfileScreen extends StatelessWidget {
                                       Expanded(
                                         child: Text(
                                           booking.place.name,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w800,
                                             fontSize: 15.0,
+                                            letterSpacing: -0.2,
+                                            color: isDark ? Colors.white : Constants.textDark,
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -299,38 +354,37 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                       Container(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0, vertical: 2.0),
+                                            horizontal: 8.0, vertical: 3.0),
                                         decoration: BoxDecoration(
-                                          color: Colors.green
-                                              .withValues(alpha: 0.15),
+                                          color: const Color(0xFF10B981).withValues(alpha: 0.12),
                                           borderRadius:
                                               BorderRadius.circular(6.0),
                                         ),
                                         child: const Text(
                                           "Confirmed",
                                           style: TextStyle(
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF10B981),
+                                            fontWeight: FontWeight.w700,
                                             fontSize: 11.0,
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 4.0),
+                                  const SizedBox(height: 5.0),
                                   Text(
                                     "${_formatDate(booking.checkIn)} - ${_formatDate(booking.checkOut)} • ${booking.nights} nights",
                                     style: TextStyle(
                                       fontSize: 12.0,
-                                      color: Colors.blueGrey[400],
+                                      color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                                     ),
                                   ),
                                   const SizedBox(height: 4.0),
                                   Text(
                                     "${booking.guests} Guests • Ref: #${booking.id}",
                                     style: TextStyle(
-                                      fontSize: 12.0,
-                                      color: Colors.blueGrey[300],
+                                      fontSize: 11.5,
+                                      color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
                                     ),
                                   ),
                                 ],
@@ -338,15 +392,19 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const Divider(height: 18.0),
+                        Divider(
+                          height: 22.0,
+                          color: isDark ? const Color(0xFF2E384D) : const Color(0xFFF1F5F9),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               "Total: \$${booking.totalPrice.toStringAsFixed(2)}",
                               style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 14.5,
+                                color: Constants.brandBlue,
                               ),
                             ),
                             Row(
@@ -356,10 +414,13 @@ class ProfileScreen extends StatelessWidget {
                                     _confirmCancelBooking(context, booking.id);
                                   },
                                   style: TextButton.styleFrom(
-                                    foregroundColor: Colors.red[400],
+                                    foregroundColor: const Color(0xFFEF4444),
                                     visualDensity: VisualDensity.compact,
                                   ),
-                                  child: const Text("Cancel"),
+                                  child: const Text(
+                                    "Cancel",
+                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 ElevatedButton(
@@ -374,17 +435,18 @@ class ProfileScreen extends StatelessWidget {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .secondary,
-                                    foregroundColor:
-                                        isDark ? Colors.black : Colors.white,
+                                    backgroundColor: Constants.brandBlue,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
                                     visualDensity: VisualDensity.compact,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
-                                  child: const Text("View"),
+                                  child: const Text(
+                                    "View",
+                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                  ),
                                 ),
                               ],
                             ),
@@ -400,18 +462,30 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 24.0),
 
           // Settings & Preferences
-          const Text(
+          Text(
             "Settings & Preferences",
             style: TextStyle(
               fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.3,
+              color: isDark ? Colors.white : Constants.textDark,
             ),
           ),
           const SizedBox(height: 12.0),
           Container(
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E1E1E) : Colors.blueGrey[50],
-              borderRadius: BorderRadius.circular(14.0),
+              color: isDark ? const Color(0xFF1E2430) : Colors.white,
+              borderRadius: BorderRadius.circular(18.0),
+              border: Border.all(
+                color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1E60FF).withValues(alpha: 0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Column(
               children: [
@@ -420,13 +494,21 @@ class ProfileScreen extends StatelessWidget {
                   builder: (context, currentMode, _) {
                     final isDarkMode = currentMode == ThemeMode.dark;
                     return SwitchListTile(
+                      activeTrackColor: Constants.brandBlue,
                       secondary: Icon(
-                        isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                        isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                        color: Constants.brandBlue,
                       ),
-                      title: const Text("Dark Theme"),
+                      title: const Text(
+                        "Dark Theme",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
                       subtitle: Text(
                         isDarkMode ? "Enabled" : "White Mode Active",
-                        style: const TextStyle(fontSize: 12.0),
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+                        ),
                       ),
                       value: isDarkMode,
                       onChanged: (val) {
@@ -436,13 +518,25 @@ class ProfileScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const Divider(height: 1),
+                Divider(
+                  height: 1,
+                  color: isDark ? const Color(0xFF2E384D) : const Color(0xFFF1F5F9),
+                ),
                 ListTile(
-                  leading: const Icon(Icons.delete_sweep_outlined),
-                  title: const Text("Clear All Bookings"),
-                  subtitle: const Text(
+                  leading: const Icon(
+                    Icons.delete_sweep_rounded,
+                    color: Color(0xFFEF4444),
+                  ),
+                  title: const Text(
+                    "Clear All Bookings",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  subtitle: Text(
                     "Reset booking records",
-                    style: TextStyle(fontSize: 12.0),
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+                    ),
                   ),
                   onTap: () => _confirmClearBookings(context),
                 ),
@@ -459,6 +553,7 @@ class ProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: const Text("Cancel Booking?"),
         content: const Text(
           "Are you sure you want to cancel this reservation? This action cannot be undone.",
@@ -469,7 +564,7 @@ class ProfileScreen extends StatelessWidget {
             child: const Text("Keep"),
           ),
           TextButton(
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: const Color(0xFFEF4444)),
             onPressed: () {
               Navigator.pop(ctx);
               bookingService.cancelBooking(id);
@@ -490,6 +585,7 @@ class ProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: const Text("Clear All Bookings?"),
         content: const Text(
           "This will erase all saved booking records from your device.",
@@ -500,7 +596,7 @@ class ProfileScreen extends StatelessWidget {
             child: const Text("Cancel"),
           ),
           TextButton(
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: const Color(0xFFEF4444)),
             onPressed: () {
               Navigator.pop(ctx);
               bookingService.clearAllBookings();
@@ -523,32 +619,53 @@ class ProfileScreen extends StatelessWidget {
     required String count,
     required IconData icon,
     required Color iconColor,
+    required Color bgColor,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.blueGrey[50],
-        borderRadius: BorderRadius.circular(14.0),
+        color: isDark ? const Color(0xFF1E2430) : Colors.white,
+        borderRadius: BorderRadius.circular(18.0),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1E60FF).withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          Icon(icon, color: iconColor, size: 22),
-          const SizedBox(height: 6.0),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: bgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
+          const SizedBox(height: 8.0),
           Text(
             count,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
+              color: isDark ? Colors.white : Constants.textDark,
             ),
           ),
           const SizedBox(height: 2.0),
           Text(
             title,
             style: TextStyle(
-              fontSize: 11.0,
-              color: Colors.blueGrey[400],
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
             ),
             textAlign: TextAlign.center,
           ),

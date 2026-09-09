@@ -57,16 +57,16 @@ class FavoritesScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
+                      Container(
+                      padding: const EdgeInsets.all(22),
                       decoration: BoxDecoration(
-                        color: Colors.red.withValues(alpha: 0.08),
+                        color: Constants.brandBlueSoft,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.favorite_border_rounded,
-                        size: 64.0,
-                        color: Colors.redAccent,
+                        Icons.bookmark_outline_rounded,
+                        size: 56.0,
+                        color: Constants.brandBlue,
                       ),
                     ),
                     const SizedBox(height: 20.0),
@@ -74,33 +74,37 @@ class FavoritesScreen extends StatelessWidget {
                       "No saved places yet",
                       style: TextStyle(
                         fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.3,
                       ),
                     ),
                     const SizedBox(height: 8.0),
                     Text(
-                      "Explore amazing destinations and tap the bookmark icon to save them here for your next journey.",
+                      "Explore amazing destinations and tap the bookmark icon to save your favorite spots for your next journey.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14.0,
-                        color: Colors.blueGrey[400],
+                        color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+                        height: 1.4,
                       ),
                     ),
                     const SizedBox(height: 24.0),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.secondary,
-                        foregroundColor:
-                            isDark ? Colors.black : Colors.white,
+                        backgroundColor: Constants.brandBlue,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24.0, vertical: 12.0),
+                            horizontal: 24.0, vertical: 14.0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: BorderRadius.circular(16.0),
                         ),
                       ),
-                      icon: const Icon(Icons.explore),
-                      label: const Text("Explore Destinations"),
+                      icon: const Icon(Icons.explore_rounded, size: 18),
+                      label: const Text(
+                        "Explore Destinations",
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
                       onPressed: onExploreTap,
                     ),
                   ],
@@ -122,15 +126,15 @@ class FavoritesScreen extends StatelessWidget {
                 background: Container(
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 20.0),
-                  margin: const EdgeInsets.only(bottom: 15.0),
+                  margin: const EdgeInsets.only(bottom: 14.0),
                   decoration: BoxDecoration(
-                    color: Colors.red[400],
-                    borderRadius: BorderRadius.circular(10.0),
+                    color: const Color(0xFFEF4444),
+                    borderRadius: BorderRadius.circular(18.0),
                   ),
                   child: const Icon(
-                    Icons.delete_outline,
+                    Icons.delete_outline_rounded,
                     color: Colors.white,
-                    size: 28,
+                    size: 26,
                   ),
                 ),
                 onDismissed: (_) {
@@ -141,6 +145,7 @@ class FavoritesScreen extends StatelessWidget {
                       content: Text("${place.name} removed from saved places"),
                       action: SnackBarAction(
                         label: "UNDO",
+                        textColor: Constants.accentGold,
                         onPressed: () {
                           favoritesService.toggleFavorite(place.id);
                         },
@@ -149,124 +154,151 @@ class FavoritesScreen extends StatelessWidget {
                   );
                 },
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? const Color(0xFF1E1E1E)
-                            : Colors.blueGrey[50],
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Hero(
-                              tag: heroTag,
-                              child: Image.asset(
-                                place.img,
-                                height: 75.0,
-                                width: 75.0,
-                                fit: BoxFit.cover,
+                  padding: const EdgeInsets.only(bottom: 14.0),
+                  child: Material(
+                    color: isDark ? const Color(0xFF1E2430) : Colors.white,
+                    borderRadius: BorderRadius.circular(18.0),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(18.0),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => Details(
+                              place: place,
+                              heroTag: heroTag,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18.0),
+                          border: Border.all(
+                            color: isDark
+                                ? const Color(0xFF2E384D)
+                                : const Color(0xFFE8EEF8),
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF1E60FF).withValues(alpha: 0.04),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(14.0),
+                              child: Hero(
+                                tag: heroTag,
+                                child: Image.asset(
+                                  place.img,
+                                  height: 80.0,
+                                  width: 80.0,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 14.0),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  place.name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15.0,
+                            const SizedBox(width: 14.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    place.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 15.0,
+                                      letterSpacing: -0.2,
+                                      color: isDark ? Colors.white : Constants.textDark,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4.0),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      size: 13.0,
-                                      color: Colors.blueGrey[300],
-                                    ),
-                                    const SizedBox(width: 2.0),
-                                    Expanded(
-                                      child: Text(
-                                        place.location,
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.blueGrey[300],
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                  const SizedBox(height: 5.0),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on_rounded,
+                                        size: 14.0,
+                                        color: Constants.brandBlue,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 6.0),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      place.price,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                          size: 14,
-                                        ),
-                                        const SizedBox(width: 2),
-                                        Text(
-                                          "${place.rating}",
-                                          style: const TextStyle(
+                                      const SizedBox(width: 3.0),
+                                      Expanded(
+                                        child: Text(
+                                          place.location,
+                                          style: TextStyle(
                                             fontSize: 12.0,
-                                            fontWeight: FontWeight.bold,
+                                            color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
                                           ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "${place.price}/night",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 14.0,
+                                          color: Constants.brandBlue,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 7.0, vertical: 2.5),
+                                        decoration: BoxDecoration(
+                                          color: Constants.accentGold.withValues(alpha: 0.15),
+                                          borderRadius: BorderRadius.circular(8.0),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.star_rounded,
+                                              color: Constants.accentGold,
+                                              size: 13,
+                                            ),
+                                            const SizedBox(width: 2),
+                                            Text(
+                                              "${place.rating}",
+                                              style: const TextStyle(
+                                                fontSize: 11.5,
+                                                fontWeight: FontWeight.w700,
+                                                color: Constants.accentGold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.favorite,
-                              color: Colors.redAccent,
+                            IconButton(
+                              icon: const Icon(
+                                Icons.bookmark_rounded,
+                                color: Constants.brandBlue,
+                                size: 22,
+                              ),
+                              tooltip: "Remove from Saved",
+                              onPressed: () {
+                                favoritesService.toggleFavorite(place.id);
+                              },
                             ),
-                            tooltip: "Remove from Saved",
-                            onPressed: () {
-                              favoritesService.toggleFavorite(place.id);
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => Details(
-                            place: place,
-                            heroTag: heroTag,
-                          ),
-                        ),
-                      );
-                    },
                   ),
                 ),
               );
