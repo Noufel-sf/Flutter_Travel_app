@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/screens/favorites_screen.dart';
 import 'package:flutter_travel_concept/screens/home.dart';
 import 'package:flutter_travel_concept/screens/profile_screen.dart';
+import 'package:flutter_travel_concept/screens/reviews_screen.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
 import 'package:flutter_travel_concept/services/favorites_service.dart';
+import 'package:flutter_travel_concept/services/reviews_service.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
 class MainScreen extends StatefulWidget {
@@ -29,7 +31,9 @@ class _MainScreenState extends State<MainScreen> {
           FavoritesScreen(
             onExploreTap: () => navigationTapped(0),
           ),
-          const Home(),
+          ReviewsScreen(
+            onExploreTap: () => navigationTapped(0),
+          ),
           ProfileScreen(
             onExploreTap: () => navigationTapped(0),
           ),
@@ -53,7 +57,16 @@ class _MainScreenState extends State<MainScreen> {
                 );
               },
             ),
-            barIcon(icon: Icons.mode_comment, page: 2, badge: true),
+            ListenableBuilder(
+              listenable: reviewsService,
+              builder: (context, _) {
+                return barIcon(
+                  icon: Icons.mode_comment,
+                  page: 2,
+                  badge: reviewsService.count > 0,
+                );
+              },
+            ),
             ListenableBuilder(
               listenable: bookingService,
               builder: (context, _) {

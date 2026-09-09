@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/services/favorites_service.dart';
+import 'package:flutter_travel_concept/services/reviews_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/widgets/booking_bottom_sheet.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
+import 'package:flutter_travel_concept/widgets/write_review_dialog.dart';
 
 class Details extends StatefulWidget {
   final Place place;
@@ -188,7 +190,88 @@ class _DetailsState extends State<Details> {
                   textAlign: TextAlign.left,
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 24.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Traveler Reviews",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  TextButton.icon(
+                    icon: const Icon(Icons.add_comment_outlined, size: 16),
+                    label: const Text("Write Tip"),
+                    onPressed: () {
+                      WriteReviewDialog.show(context, defaultPlace: place);
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              ListenableBuilder(
+                listenable: reviewsService,
+                builder: (context, _) {
+                  final placeReviews =
+                      reviewsService.getReviewsForPlace(place.id);
+                  if (placeReviews.isEmpty) {
+                    return Text(
+                      "No tips yet. Be the first to share your experience!",
+                      style:
+                          TextStyle(fontSize: 13, color: Colors.blueGrey[400]),
+                    );
+                  }
+                  final topReview = placeReviews.first;
+                  final isDark =
+                      Theme.of(context).brightness == Brightness.dark;
+                  return Container(
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0xFF1E1E1E)
+                          : Colors.blueGrey[50],
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              topReview.userName,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 13),
+                            ),
+                            Row(
+                              children: [
+                                const Icon(Icons.star,
+                                    color: Colors.amber, size: 14),
+                                const SizedBox(width: 2),
+                                Text(
+                                  topReview.rating.toStringAsFixed(1),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          "\"${topReview.comment}\"",
+                          style: const TextStyle(
+                              fontSize: 13, fontStyle: FontStyle.italic),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 80.0),
             ],
           ),
         ],
