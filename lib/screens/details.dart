@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_travel_concept/models/place.dart';
-import 'package:flutter_travel_concept/services/favorites_service.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/services/reviews_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/widgets/booking_bottom_sheet.dart';
@@ -159,11 +161,11 @@ class _DetailsState extends State<Details> {
                               },
                             ),
                             const SizedBox(width: 10.0),
-                            ListenableBuilder(
-                              listenable: favoritesService,
-                              builder: (context, _) {
-                                final isSaved =
-                                    favoritesService.isFavorite(place.id);
+                            BlocBuilder<FavoritesCubit, FavoritesState>(
+                              builder: (context, state) {
+                                final isSaved = (state is FavoritesLoaded)
+                                    ? state.isFavorite(place.id)
+                                    : false;
                                 return _floatingGlassButton(
                                   icon: isSaved
                                       ? Icons.bookmark_rounded
@@ -171,17 +173,16 @@ class _DetailsState extends State<Details> {
                                   iconColor: isSaved
                                       ? Constants.brandBlue
                                       : Colors.white,
-                                  onTap: () async {
-                                    final added = await favoritesService
-                                        .toggleFavorite(place.id);
-                                    if (!context.mounted) return;
+                                  onTap: () {
+                                    context.read<FavoritesCubit>().toggleFavorite(place.id);
+                                    final willBeSaved = !isSaved;
                                     ScaffoldMessenger.of(context)
                                         .hideCurrentSnackBar();
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         duration: const Duration(seconds: 1),
                                         content: Text(
-                                          added
+                                          willBeSaved
                                               ? "${place.name} saved to bookmarks!"
                                               : "${place.name} removed from bookmarks.",
                                         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/booking.dart';
 import 'package:flutter_travel_concept/models/place.dart';
+import 'package:flutter_travel_concept/screens/boarding_pass_screen.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 
@@ -194,7 +195,7 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
               const SizedBox(height: 20.0),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Constants.brandBlue,
                     foregroundColor: Colors.white,
@@ -206,10 +207,32 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                   ),
                   onPressed: () {
                     Navigator.pop(dialogContext);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => BoardingPassScreen(booking: booking),
+                      ),
+                    );
                   },
-                  child: const Text(
-                    "Done",
+                  icon: const Icon(Icons.confirmation_number_outlined, size: 18),
+                  label: const Text(
+                    "View Digital Pass & QR Code",
                     style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext);
+                  },
+                  child: Text(
+                    "Back to Destination",
+                    style: TextStyle(
+                      color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),

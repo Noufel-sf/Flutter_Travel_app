@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
+import 'package:flutter_travel_concept/screens/boarding_pass_screen.dart';
 import 'package:flutter_travel_concept/screens/details.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
-import 'package:flutter_travel_concept/services/favorites_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
@@ -149,16 +152,20 @@ class ProfileScreen extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: ListenableBuilder(
-                  listenable: favoritesService,
-                  builder: (context, _) => _statCard(
-                    context,
-                    title: "Saved",
-                    count: "${favoritesService.count}",
-                    icon: Icons.bookmark_rounded,
-                    iconColor: Constants.brandBlue,
-                    bgColor: Constants.brandBlueSoft,
-                  ),
+                child: BlocBuilder<FavoritesCubit, FavoritesState>(
+                  builder: (context, state) {
+                    final count = (state is FavoritesLoaded)
+                        ? state.favoriteIds.length
+                        : 0;
+                    return _statCard(
+                      context,
+                      title: "Saved",
+                      count: "$count",
+                      icon: Icons.bookmark_rounded,
+                      iconColor: Constants.brandBlue,
+                      bgColor: Constants.brandBlueSoft,
+                    );
+                  },
                 ),
               ),
               const SizedBox(width: 10.0),
@@ -423,6 +430,30 @@ class ProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 8),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => BoardingPassScreen(booking: booking),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.confirmation_number_outlined, size: 13),
+                                  label: const Text(
+                                    "Pass",
+                                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Constants.brandBlueSoft,
+                                    foregroundColor: Constants.brandBlue,
+                                    elevation: 0,
+                                    visualDensity: VisualDensity.compact,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).push(

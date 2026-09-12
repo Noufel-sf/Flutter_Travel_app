@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
+import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/screens/favorites_screen.dart';
 import 'package:flutter_travel_concept/screens/home.dart';
 import 'package:flutter_travel_concept/screens/profile_screen.dart';
 import 'package:flutter_travel_concept/screens/reviews_screen.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
-import 'package:flutter_travel_concept/services/favorites_service.dart';
 import 'package:flutter_travel_concept/services/reviews_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
@@ -67,14 +69,18 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Icons.home_rounded,
                 inactiveIcon: Icons.home_outlined,
               ),
-              ListenableBuilder(
-                listenable: favoritesService,
-                builder: (context, _) => _buildNavButton(
-                  pageIndex: 1,
-                  icon: Icons.bookmark_rounded,
-                  inactiveIcon: Icons.bookmark_border_rounded,
-                  showBadge: favoritesService.count > 0,
-                ),
+              BlocBuilder<FavoritesCubit, FavoritesState>(
+                builder: (context, state) {
+                  final count = (state is FavoritesLoaded)
+                      ? state.favoriteIds.length
+                      : 0;
+                  return _buildNavButton(
+                    pageIndex: 1,
+                    icon: Icons.bookmark_rounded,
+                    inactiveIcon: Icons.bookmark_border_rounded,
+                    showBadge: count > 0,
+                  );
+                },
               ),
               ListenableBuilder(
                 listenable: reviewsService,

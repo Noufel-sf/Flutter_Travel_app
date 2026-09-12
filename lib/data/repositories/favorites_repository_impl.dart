@@ -17,12 +17,10 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
 
   @override
   Future<Set<String>> getFavoriteIds() async {
-    if (!_isCacheLoaded) {
-      final ids = await _localDataSource.getFavoriteIds();
-      _cachedFavoriteIds.clear();
-      _cachedFavoriteIds.addAll(ids);
-      _isCacheLoaded = true;
-    }
+    final ids = await _localDataSource.getFavoriteIds();
+    _cachedFavoriteIds.clear();
+    _cachedFavoriteIds.addAll(ids);
+    _isCacheLoaded = true;
     return Set.unmodifiable(_cachedFavoriteIds);
   }
 
