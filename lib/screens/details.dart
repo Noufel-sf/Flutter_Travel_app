@@ -5,6 +5,7 @@ import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_c
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/services/reviews_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/util/haptics.dart';
 import 'package:flutter_travel_concept/widgets/booking_bottom_sheet.dart';
 import 'package:flutter_travel_concept/widgets/write_review_dialog.dart';
 
@@ -174,6 +175,7 @@ class _DetailsState extends State<Details> {
                                       ? Constants.brandBlue
                                       : Colors.white,
                                   onTap: () {
+                                    Haptics.light();
                                     context.read<FavoritesCubit>().toggleFavorite(place.id);
                                     final willBeSaved = !isSaved;
                                     ScaffoldMessenger.of(context)
@@ -472,6 +474,7 @@ class _DetailsState extends State<Details> {
                       horizontal: 36.0, vertical: 15.0),
                 ),
                 onPressed: () {
+                  Haptics.medium();
                   BookingBottomSheet.show(context, place);
                 },
                 child: const Text(

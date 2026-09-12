@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/filter_criteria.dart';
 import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/util/haptics.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   final FilterCriteria initialCriteria;
@@ -152,6 +153,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
                 TextButton(
                   onPressed: () {
+                    Haptics.warning();
                     setState(() {
                       _criteria = const FilterCriteria();
                     });
@@ -218,6 +220,10 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       "\$${_criteria.priceRange.end.round()}",
                     ),
                     onChanged: (vals) {
+                      if ((vals.start - _criteria.priceRange.start).abs() >= 15 ||
+                          (vals.end - _criteria.priceRange.end).abs() >= 15) {
+                        Haptics.selection();
+                      }
                       setState(() {
                         _criteria = _criteria.copyWith(priceRange: vals);
                       });
@@ -269,6 +275,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                                   : Constants.textLight),
                         ),
                         onSelected: (_) {
+                          Haptics.selection();
                           setState(() {
                             _criteria = _criteria.copyWith(sortBy: sort);
                           });
@@ -323,6 +330,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                                   : Constants.textLight),
                         ),
                         onSelected: (_) {
+                          Haptics.selection();
                           setState(() {
                             _criteria = _criteria.copyWith(minRating: r);
                           });
@@ -379,6 +387,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                                   : Constants.textLight),
                         ),
                         onSelected: (selected) {
+                          Haptics.selection();
                           final newSet = Set<String>.from(_criteria.amenities);
                           if (selected) {
                             newSet.add(amenity);
@@ -423,6 +432,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   ),
                 ),
                 onPressed: () {
+                  Haptics.medium();
                   widget.onApply(_criteria);
                   Navigator.pop(context);
                 },

@@ -404,82 +404,85 @@ class ProfileScreen extends StatelessWidget {
                           color: isDark ? const Color(0xFF2E384D) : const Color(0xFFF1F5F9),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Total: \$${booking.totalPrice.toStringAsFixed(2)}",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 14.5,
-                                color: Constants.brandBlue,
+                            Expanded(
+                              child: Text(
+                                "Total: \$${booking.totalPrice.toStringAsFixed(2)}",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 14.0,
+                                  color: Constants.brandBlue,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Row(
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    _confirmCancelBooking(context, booking.id);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: const Color(0xFFEF4444),
-                                    visualDensity: VisualDensity.compact,
+                            const SizedBox(width: 4),
+                            IconButton(
+                              tooltip: "Cancel booking",
+                              icon: const Icon(
+                                Icons.delete_outline_rounded,
+                                size: 19,
+                                color: Color(0xFFEF4444),
+                              ),
+                              onPressed: () {
+                                _confirmCancelBooking(context, booking.id);
+                              },
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            const SizedBox(width: 4),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => BoardingPassScreen(booking: booking),
                                   ),
-                                  child: const Text(
-                                    "Cancel",
-                                    style: TextStyle(fontWeight: FontWeight.w600),
-                                  ),
+                                );
+                              },
+                              icon: const Icon(Icons.confirmation_number_outlined, size: 13),
+                              label: const Text(
+                                "Pass",
+                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Constants.brandBlueSoft,
+                                foregroundColor: Constants.brandBlue,
+                                elevation: 0,
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                visualDensity: VisualDensity.compact,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                const SizedBox(width: 8),
-                                ElevatedButton.icon(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) => BoardingPassScreen(booking: booking),
-                                      ),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.confirmation_number_outlined, size: 13),
-                                  label: const Text(
-                                    "Pass",
-                                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Constants.brandBlueSoft,
-                                    foregroundColor: Constants.brandBlue,
-                                    elevation: 0,
-                                    visualDensity: VisualDensity.compact,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => Details(
+                                      place: booking.place,
+                                      heroTag: "booking_${booking.id}",
                                     ),
                                   ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Constants.brandBlue,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                visualDensity: VisualDensity.compact,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                const SizedBox(width: 6),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) => Details(
-                                          place: booking.place,
-                                          heroTag: "booking_${booking.id}",
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Constants.brandBlue,
-                                    foregroundColor: Colors.white,
-                                    elevation: 0,
-                                    visualDensity: VisualDensity.compact,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    "View",
-                                    style: TextStyle(fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ],
+                              ),
+                              child: const Text(
+                                "View",
+                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                              ),
                             ),
                           ],
                         ),

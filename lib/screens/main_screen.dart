@@ -9,6 +9,7 @@ import 'package:flutter_travel_concept/screens/reviews_screen.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
 import 'package:flutter_travel_concept/services/reviews_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/util/haptics.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
 class MainScreen extends StatefulWidget {
@@ -140,6 +141,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void navigationTapped(int page) {
+    Haptics.light();
     _pageController.jumpToPage(page);
   }
 

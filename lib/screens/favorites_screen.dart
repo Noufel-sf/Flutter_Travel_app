@@ -4,6 +4,8 @@ import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_c
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/screens/details.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/util/haptics.dart';
+import 'package:flutter_travel_concept/widgets/favorites_skeleton.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
 class FavoritesScreen extends StatelessWidget {
@@ -50,9 +52,7 @@ class FavoritesScreen extends StatelessWidget {
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
           if (state is FavoritesLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: Constants.brandBlue),
-            );
+            return const FavoritesSkeleton();
           }
 
           if (state is FavoritesError) {
@@ -142,46 +142,54 @@ class FavoritesScreen extends StatelessWidget {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-            itemCount: favoritePlaces.length,
-            itemBuilder: (context, index) {
-              final place = favoritePlaces[index];
-              final heroTag = "favorite_place_${place.id}";
+          return RefreshIndicator(
+            color: Constants.brandBlue,
+            onRefresh: () async {
+              Haptics.light();
+              await context.read<FavoritesCubit>().loadFavorites();
+            },
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+              itemCount: favoritePlaces.length,
+              itemBuilder: (context, index) {
+                final place = favoritePlaces[index];
+                final heroTag = "favorite_place_${place.id}";
 
-              return Dismissible(
-                key: Key("favorite_${place.id}"),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 20.0),
-                  margin: const EdgeInsets.only(bottom: 14.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEF4444),
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  child: const Icon(
-                    Icons.delete_outline_rounded,
-                    color: Colors.white,
-                    size: 26,
-                  ),
-                ),
-                onDismissed: (_) {
-                  context.read<FavoritesCubit>().toggleFavorite(place.id);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      duration: const Duration(seconds: 2),
-                      content: Text("${place.name} removed from saved places"),
-                      action: SnackBarAction(
-                        label: "UNDO",
-                        textColor: Constants.accentGold,
-                        onPressed: () {
-                          context.read<FavoritesCubit>().toggleFavorite(place.id);
-                        },
-                      ),
+                return Dismissible(
+                  key: Key("favorite_${place.id}"),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20.0),
+                    margin: const EdgeInsets.only(bottom: 14.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEF4444),
+                      borderRadius: BorderRadius.circular(18.0),
                     ),
-                  );
-                },
+                    child: const Icon(
+                      Icons.delete_outline_rounded,
+                      color: Colors.white,
+                      size: 26,
+                    ),
+                  ),
+                  onDismissed: (_) {
+                    Haptics.light();
+                    context.read<FavoritesCubit>().toggleFavorite(place.id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: const Duration(seconds: 2),
+                        content: Text("${place.name} removed from saved places"),
+                        action: SnackBarAction(
+                          label: "UNDO",
+                          textColor: Constants.accentGold,
+                          onPressed: () {
+                            Haptics.light();
+                            context.read<FavoritesCubit>().toggleFavorite(place.id);
+                          },
+                        ),
+                      ),
+                    );
+                  },
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 14.0),
                   child: Material(
@@ -332,9 +340,10 @@ class FavoritesScreen extends StatelessWidget {
                 ),
               );
             },
-          );
-        },
-      ),
-    );
-  }
+          ),
+        );
+      },
+    ),
+  );
+}
 }

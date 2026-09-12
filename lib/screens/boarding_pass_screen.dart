@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/booking.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/util/haptics.dart';
 import 'package:flutter_travel_concept/widgets/boarding_pass_card.dart';
 
 class BoardingPassScreen extends StatefulWidget {
@@ -50,6 +51,7 @@ class _BoardingPassScreenState extends State<BoardingPassScreen>
   }
 
   void _handleSaveWallet() {
+    Haptics.success();
     setState(() {
       _isSavedToWallet = true;
     });
@@ -77,6 +79,7 @@ class _BoardingPassScreenState extends State<BoardingPassScreen>
   }
 
   void _handleShareTicket() {
+    Haptics.medium();
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(

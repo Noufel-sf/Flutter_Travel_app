@@ -3,8 +3,10 @@ import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/models/review.dart';
 import 'package:flutter_travel_concept/services/reviews_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/util/haptics.dart';
 import 'package:flutter_travel_concept/util/places.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
+import 'package:flutter_travel_concept/widgets/reviews_skeleton.dart';
 import 'package:flutter_travel_concept/widgets/write_review_dialog.dart';
 
 class ReviewsScreen extends StatefulWidget {
@@ -18,6 +20,20 @@ class ReviewsScreen extends StatefulWidget {
 
 class _ReviewsScreenState extends State<ReviewsScreen> {
   String _selectedPlaceId = "All";
+  bool _isRefreshing = false;
+
+  Future<void> _handleRefresh() async {
+    Haptics.light();
+    setState(() {
+      _isRefreshing = true;
+    });
+    await Future.delayed(const Duration(milliseconds: 650));
+    if (mounted) {
+      setState(() {
+        _isRefreshing = false;
+      });
+    }
+  }
 
   String _formatTimeAgo(DateTime d) {
     final diff = DateTime.now().difference(d);
@@ -104,6 +120,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                       ),
                     ),
                     onSelected: (val) {
+                      Haptics.selection();
                       setState(() {
                         _selectedPlaceId = id;
                       });
@@ -116,15 +133,20 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
           // Reviews List
           Expanded(
-            child: ListenableBuilder(
-              listenable: reviewsService,
-              builder: (context, _) {
-                final allReviews = reviewsService.reviews;
-                final filtered = _selectedPlaceId == "All"
-                    ? allReviews
-                    : allReviews
-                        .where((r) => r.placeId == _selectedPlaceId)
-                        .toList();
+            child: RefreshIndicator(
+              color: Constants.brandBlue,
+              onRefresh: _handleRefresh,
+              child: _isRefreshing
+                  ? const ReviewsSkeleton()
+                  : ListenableBuilder(
+                      listenable: reviewsService,
+                      builder: (context, _) {
+                        final allReviews = reviewsService.reviews;
+                        final filtered = _selectedPlaceId == "All"
+                            ? allReviews
+                            : allReviews
+                                .where((r) => r.placeId == _selectedPlaceId)
+                                .toList();
 
                 if (filtered.isEmpty) {
                   return Center(
@@ -178,6 +200,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               },
             ),
           ),
+        ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -193,6 +216,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           borderRadius: BorderRadius.circular(20.0),
         ),
         onPressed: () {
+          Haptics.medium();
           Place? currentPlace;
           if (_selectedPlaceId != "All") {
             try {
@@ -343,6 +367,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               InkWell(
                 borderRadius: BorderRadius.circular(8.0),
                 onTap: () {
+                  Haptics.light();
                   reviewsService.toggleHelpful(review.id);
                 },
                 child: Padding(

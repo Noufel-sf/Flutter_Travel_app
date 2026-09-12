@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/filter_criteria.dart';
 import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/util/haptics.dart';
 import 'package:flutter_travel_concept/util/places.dart';
 import 'package:flutter_travel_concept/widgets/filter_bottom_sheet.dart';
 import 'package:flutter_travel_concept/widgets/horizontal_place_item.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
+import 'package:flutter_travel_concept/widgets/place_skeleton.dart';
 import 'package:flutter_travel_concept/widgets/search_bar.dart';
 import 'package:flutter_travel_concept/widgets/vertical_place_item.dart';
 
@@ -85,7 +87,23 @@ class _HomeState extends State<Home> {
     return list;
   }
 
+  bool _isRefreshing = false;
+
+  Future<void> _handleRefresh() async {
+    Haptics.light();
+    setState(() {
+      _isRefreshing = true;
+    });
+    await Future.delayed(const Duration(milliseconds: 750));
+    if (mounted) {
+      setState(() {
+        _isRefreshing = false;
+      });
+    }
+  }
+
   void _clearFilters() {
+    Haptics.warning();
     setState(() {
       _searchController.clear();
       _selectedCategory = "All";
@@ -101,9 +119,15 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
+        child: RefreshIndicator(
+          color: Constants.brandBlue,
+          onRefresh: _handleRefresh,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            children: <Widget>[
             const SizedBox(height: 12.0),
 
             // Top Header: Location + Notification & Mode Toggle
@@ -198,6 +222,7 @@ class _HomeState extends State<Home> {
                 activeFiltersCount: _criteria.activeFiltersCount,
                 onClear: () => _searchController.clear(),
                 onFilterTap: () {
+                  Haptics.medium();
                   FilterBottomSheet.show(
                     context,
                     initialCriteria: _criteria,
@@ -220,7 +245,9 @@ class _HomeState extends State<Home> {
             buildCategoryChips(),
             const SizedBox(height: 10.0),
 
-            if (filtered.isEmpty)
+            if (_isRefreshing)
+              const HomeScreenSkeleton()
+            else if (filtered.isEmpty)
               buildEmptyState()
             else ...[
               // Section 1: Choice for you (Horizontal Carousel)
@@ -239,7 +266,8 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _headerCircleButton({
@@ -303,6 +331,7 @@ class _HomeState extends State<Home> {
             child: InkWell(
               borderRadius: BorderRadius.circular(16.0),
               onTap: () {
+                Haptics.selection();
                 setState(() {
                   _selectedCategory = categoryKey;
                 });

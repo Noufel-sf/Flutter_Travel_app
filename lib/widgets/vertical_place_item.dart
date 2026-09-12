@@ -4,6 +4,7 @@ import 'package:flutter_travel_concept/models/place.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:flutter_travel_concept/util/haptics.dart';
 
 import '../screens/details.dart';
 
@@ -168,6 +169,7 @@ class VerticalPlaceItem extends StatelessWidget {
                         size: 20.0,
                       ),
                       onPressed: () {
+                        Haptics.light();
                         context.read<FavoritesCubit>().toggleFavorite(place.id);
                       },
                     );
