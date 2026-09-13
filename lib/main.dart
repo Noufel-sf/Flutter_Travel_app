@@ -4,7 +4,7 @@ import 'package:flutter_travel_concept/data/repositories/favorites_repository_im
 import 'package:flutter_travel_concept/data/repositories/places_repository_impl.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
 import 'package:flutter_travel_concept/presentation/cubits/places/places_cubit.dart';
-import 'package:flutter_travel_concept/screens/main_screen.dart';
+import 'package:flutter_travel_concept/router/app_router.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 
 void main() {
@@ -29,13 +29,13 @@ class MyApp extends StatelessWidget {
       child: ValueListenableBuilder<ThemeMode>(
         valueListenable: themeModeNotifier,
         builder: (context, currentMode, _) {
-          return MaterialApp(
+          return MaterialApp.router(
             debugShowCheckedModeBanner: false,
             title: Constants.appName,
             theme: Constants.lightTheme,
             darkTheme: Constants.darkTheme,
             themeMode: currentMode,
-            home: const MainScreen(),
+            routerConfig: appRouter,
           );
         },
       ),

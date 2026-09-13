@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/screens/favorites_screen.dart';
@@ -13,7 +14,9 @@ import 'package:flutter_travel_concept/util/haptics.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final StatefulNavigationShell? navigationShell;
+
+  const MainScreen({super.key, this.navigationShell});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -21,7 +24,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late PageController _pageController;
-  int _page = 0;
+  int _fallbackPage = 0;
+
+  int get _currentPage => widget.navigationShell?.currentIndex ?? _fallbackPage;
 
   @override
   Widget build(BuildContext context) {
@@ -29,23 +34,24 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       extendBody: true,
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        onPageChanged: onPageChanged,
-        children: [
-          const Home(),
-          FavoritesScreen(
-            onExploreTap: () => navigationTapped(0),
+      body: widget.navigationShell ??
+          PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _pageController,
+            onPageChanged: onPageChanged,
+            children: [
+              const Home(),
+              FavoritesScreen(
+                onExploreTap: () => navigationTapped(0),
+              ),
+              ReviewsScreen(
+                onExploreTap: () => navigationTapped(0),
+              ),
+              ProfileScreen(
+                onExploreTap: () => navigationTapped(0),
+              ),
+            ],
           ),
-          ReviewsScreen(
-            onExploreTap: () => navigationTapped(0),
-          ),
-          ProfileScreen(
-            onExploreTap: () => navigationTapped(0),
-          ),
-        ],
-      ),
       bottomNavigationBar: SafeArea(
         child: Container(
           height: 64.0,
@@ -114,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
     required IconData inactiveIcon,
     bool showBadge = false,
   }) {
-    final isSelected = _page == pageIndex;
+    final isSelected = _currentPage == pageIndex;
 
     return InkWell(
       borderRadius: BorderRadius.circular(24.0),
@@ -142,7 +148,14 @@ class _MainScreenState extends State<MainScreen> {
 
   void navigationTapped(int page) {
     Haptics.light();
-    _pageController.jumpToPage(page);
+    if (widget.navigationShell != null) {
+      widget.navigationShell!.goBranch(
+        page,
+        initialLocation: page == widget.navigationShell!.currentIndex,
+      );
+    } else {
+      _pageController.jumpToPage(page);
+    }
   }
 
   @override
@@ -159,7 +172,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void onPageChanged(int page) {
     setState(() {
-      _page = page;
+      _fallbackPage = page;
     });
   }
 }

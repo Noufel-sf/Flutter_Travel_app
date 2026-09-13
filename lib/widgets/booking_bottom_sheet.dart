@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_travel_concept/models/booking.dart';
 import 'package:flutter_travel_concept/models/place.dart';
-import 'package:flutter_travel_concept/screens/boarding_pass_screen.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
+import 'package:go_router/go_router.dart';
 
 class BookingBottomSheet extends StatefulWidget {
   final Place place;
@@ -207,11 +207,7 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                   ),
                   onPressed: () {
                     Navigator.pop(dialogContext);
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => BoardingPassScreen(booking: booking),
-                      ),
-                    );
+                    context.push('/boarding-pass/${booking.id}', extra: booking);
                   },
                   icon: const Icon(Icons.confirmation_number_outlined, size: 18),
                   label: const Text(

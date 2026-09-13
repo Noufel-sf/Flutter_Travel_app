@@ -5,8 +5,7 @@ import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_c
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/util/haptics.dart';
-
-import '../screens/details.dart';
+import 'package:go_router/go_router.dart';
 
 class VerticalPlaceItem extends StatelessWidget {
   final Place place;
@@ -23,11 +22,7 @@ class VerticalPlaceItem extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(18.0),
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => Details(place: place, heroTag: heroTag),
-            ),
-          );
+          context.push('/details/${place.id}', extra: place);
         },
         child: Container(
           padding: const EdgeInsets.all(10.0),

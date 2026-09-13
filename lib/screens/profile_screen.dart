@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
-import 'package:flutter_travel_concept/screens/boarding_pass_screen.dart';
-import 'package:flutter_travel_concept/screens/details.dart';
 import 'package:flutter_travel_concept/services/booking_service.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatelessWidget {
   final VoidCallback? onExploreTap;
@@ -435,11 +434,7 @@ class ProfileScreen extends StatelessWidget {
                             const SizedBox(width: 4),
                             ElevatedButton.icon(
                               onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => BoardingPassScreen(booking: booking),
-                                  ),
-                                );
+                                context.push('/boarding-pass/${booking.id}', extra: booking);
                               },
                               icon: const Icon(Icons.confirmation_number_outlined, size: 13),
                               label: const Text(
@@ -460,14 +455,7 @@ class ProfileScreen extends StatelessWidget {
                             const SizedBox(width: 6),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => Details(
-                                      place: booking.place,
-                                      heroTag: "booking_${booking.id}",
-                                    ),
-                                  ),
-                                );
+                                context.push('/details/${booking.place.id}', extra: booking.place);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Constants.brandBlue,
@@ -506,75 +494,78 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12.0),
-          Container(
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E2430) : Colors.white,
-              borderRadius: BorderRadius.circular(18.0),
-              border: Border.all(
-                color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+          Material(
+            color: isDark ? const Color(0xFF1E2430) : Colors.white,
+            borderRadius: BorderRadius.circular(18.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18.0),
+                border: Border.all(
+                  color: isDark ? const Color(0xFF2E384D) : const Color(0xFFE8EEF8),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF1E60FF).withValues(alpha: 0.04),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF1E60FF).withValues(alpha: 0.04),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                ValueListenableBuilder<ThemeMode>(
-                  valueListenable: themeModeNotifier,
-                  builder: (context, currentMode, _) {
-                    final isDarkMode = currentMode == ThemeMode.dark;
-                    return SwitchListTile(
-                      activeTrackColor: Constants.brandBlue,
-                      secondary: Icon(
-                        isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
-                        color: Constants.brandBlue,
-                      ),
-                      title: const Text(
-                        "Dark Theme",
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: Text(
-                        isDarkMode ? "Enabled" : "White Mode Active",
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+              child: Column(
+                children: [
+                  ValueListenableBuilder<ThemeMode>(
+                    valueListenable: themeModeNotifier,
+                    builder: (context, currentMode, _) {
+                      final isDarkMode = currentMode == ThemeMode.dark;
+                      return SwitchListTile(
+                        activeTrackColor: Constants.brandBlue,
+                        secondary: Icon(
+                          isDarkMode ? Icons.dark_mode_rounded : Icons.light_mode_rounded,
+                          color: Constants.brandBlue,
                         ),
-                      ),
-                      value: isDarkMode,
-                      onChanged: (val) {
-                        themeModeNotifier.value =
-                            val ? ThemeMode.dark : ThemeMode.light;
-                      },
-                    );
-                  },
-                ),
-                Divider(
-                  height: 1,
-                  color: isDark ? const Color(0xFF2E384D) : const Color(0xFFF1F5F9),
-                ),
-                ListTile(
-                  leading: const Icon(
-                    Icons.delete_sweep_rounded,
-                    color: Color(0xFFEF4444),
+                        title: const Text(
+                          "Dark Theme",
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        subtitle: Text(
+                          isDarkMode ? "Enabled" : "White Mode Active",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+                          ),
+                        ),
+                        value: isDarkMode,
+                        onChanged: (val) {
+                          themeModeNotifier.value =
+                              val ? ThemeMode.dark : ThemeMode.light;
+                        },
+                      );
+                    },
                   ),
-                  title: const Text(
-                    "Clear All Bookings",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  Divider(
+                    height: 1,
+                    color: isDark ? const Color(0xFF2E384D) : const Color(0xFFF1F5F9),
                   ),
-                  subtitle: Text(
-                    "Reset booking records",
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+                  ListTile(
+                    leading: const Icon(
+                      Icons.delete_sweep_rounded,
+                      color: Color(0xFFEF4444),
                     ),
+                    title: const Text(
+                      "Clear All Bookings",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    subtitle: Text(
+                      "Reset booking records",
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: isDark ? const Color(0xFF94A3B8) : Constants.textLight,
+                      ),
+                    ),
+                    onTap: () => _confirmClearBookings(context),
                   ),
-                  onTap: () => _confirmClearBookings(context),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 30.0),

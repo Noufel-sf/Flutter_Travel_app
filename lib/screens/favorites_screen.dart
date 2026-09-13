@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_cubit.dart';
 import 'package:flutter_travel_concept/presentation/cubits/favorites/favorites_state.dart';
-import 'package:flutter_travel_concept/screens/details.dart';
 import 'package:flutter_travel_concept/util/const.dart';
 import 'package:flutter_travel_concept/util/haptics.dart';
 import 'package:flutter_travel_concept/widgets/favorites_skeleton.dart';
 import 'package:flutter_travel_concept/widgets/icon_badge.dart';
+import 'package:go_router/go_router.dart';
 
 class FavoritesScreen extends StatelessWidget {
   final VoidCallback? onExploreTap;
@@ -198,14 +198,7 @@ class FavoritesScreen extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(18.0),
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => Details(
-                              place: place,
-                              heroTag: heroTag,
-                            ),
-                          ),
-                        );
+                        context.push('/details/${place.id}', extra: place);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(12.0),
